@@ -44,7 +44,7 @@ public class GenerateMapEditor {
 					if(((i != 0) || (jPos != 0) || (kPos != 0))){
 						float flatscale = 10f;  
 						float flatNoise =  Mathf.Round (Mathf.PerlinNoise (j * flatscale, k * flatscale));
-						Debug.Log(flatNoise);
+						// Debug.Log(flatNoise);
 						MapBlock newBlock = CreateBlock(new Vector3(jPos, flatNoise - i, kPos), blockSize, baseMap, mapBlockPrefab);
 						mapTable[j][k][i] = newBlock;
 						SetNeighbours(mapTable, newBlock, i, j, k);
