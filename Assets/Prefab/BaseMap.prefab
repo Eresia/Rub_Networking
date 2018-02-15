@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 65213592896155048}
   - component: {fileID: 23340823370306354}
   - component: {fileID: 114752626039215860}
+  - component: {fileID: 114890817970868752}
   m_Layer: 0
   m_Name: BaseMap
   m_TagString: Untagged
@@ -109,3 +110,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockPrefab: {fileID: 114823707143712398, guid: 8df249c4b1f8a514287cd59b923c8c12,
     type: 2}
+  selfTransform: {fileID: 0}
+--- !u!114 &114890817970868752
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1030378248119496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26e51b2fae241264fa41959108930367, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  neighbours:
+    up: {fileID: 0}
+    down: {fileID: 0}
+    front: {fileID: 0}
+    back: {fileID: 0}
+    left: {fileID: 0}
+    right: {fileID: 0}
+  selfRenderer: {fileID: 0}

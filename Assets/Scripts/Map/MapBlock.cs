@@ -67,6 +67,7 @@ public class MapBlock : MonoBehaviour {
 	}
 
 	public void CalculateVisibility(){
-		selfRenderer.enabled = neighbours.IsNotArounded();
+		selfRenderer.gameObject.SetActive(neighbours.IsNotArounded());
+		// selfRenderer.enabled = true;
 	}
 }
