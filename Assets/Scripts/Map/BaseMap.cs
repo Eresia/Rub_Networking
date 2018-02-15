@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class BaseMap : MonoBehaviour {
-
-	public MapBlock blockPrefab;
 	
 	[HideInInspector]
 	public Transform selfTransform;

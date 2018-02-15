@@ -12,6 +12,7 @@ public class Character : MonoBehaviour {
 	public float maxAngleRotation;
 
 	private Transform selfTranform;
+	private Rigidbody selfRigidbody;
 
 	[SerializeField]
 	private Transform selfCamera;
@@ -19,6 +20,7 @@ public class Character : MonoBehaviour {
 	void Awake()
 	{
 		selfTranform = GetComponent<Transform>();
+		selfRigidbody = GetComponent<Rigidbody>();
 		Cursor.lockState = CursorLockMode.Locked;
 	}
 
@@ -26,10 +28,19 @@ public class Character : MonoBehaviour {
 	{
 		Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 		Rotate(Input.GetAxis ("Mouse X"), Input.GetAxis ("Mouse Y"));
+		if(Input.GetButtonDown ("Jump")){
+			Jump();
+		}
 	}
 
 	public void Move(float x, float z){
-		selfTranform.position += selfTranform.forward * z * moveSpeed * Time.deltaTime + selfTranform.right * x * moveSpeed * Time.deltaTime;
+		selfRigidbody.MovePosition(selfTranform.position + selfTranform.forward * z * moveSpeed * Time.deltaTime + selfTranform.right * x * moveSpeed * Time.deltaTime);
+	}
+
+	public void Jump(){
+		if(Physics.Raycast(selfTranform.position, Vector3.down, 1.5f)){
+			selfRigidbody.AddForce(Vector3.up * 1f, ForceMode.Impulse);
+		}
 	}
 
 	public void Rotate(float vertical, float horizontal){
