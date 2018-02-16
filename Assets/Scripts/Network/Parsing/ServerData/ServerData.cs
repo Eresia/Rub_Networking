@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface Data {
+public interface ServerData : Data{
 
-	
+	Data Execute();
+
+	bool Validate();
 }

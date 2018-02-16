@@ -1,16 +1,32 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Net;
+using System.Net.Sockets;
 using UnityEngine;
+using System.IO;
 
-public class DataParser : MonoBehaviour {
+public abstract class DataParser {
 
-	// Use this for initialization
-	void Start () {
-		
+	protected BinaryFormatter formatter;
+
+	public DataParser(){
+		formatter = new BinaryFormatter();
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+
+	public abstract void Parse(NetworkObject network, IPEndPoint client, byte[] data, ConcurrentQueue<NetworkAction> actionQueue);
+
+	public byte[] ToBytes(Data data){
+		byte[] result;
+
+		using (var ms = new MemoryStream())
+		{
+			formatter.Serialize(ms, data);
+			result = ms.ToArray();
+			ms.Close();
+		}
+
+		return result;
 	}
 }
