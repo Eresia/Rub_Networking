@@ -15,6 +15,9 @@ public class Character : MonoBehaviour {
 	private Rigidbody selfRigidbody;
 
 	[SerializeField]
+	private float jumpForce;
+
+	[SerializeField]
 	private Transform selfCamera;
 
 	void Awake()
@@ -34,13 +37,21 @@ public class Character : MonoBehaviour {
 	}
 
 	public void Move(float x, float z){
-		selfRigidbody.MovePosition(selfTranform.position + selfTranform.forward * z * moveSpeed * Time.deltaTime + selfTranform.right * x * moveSpeed * Time.deltaTime);
+		selfTranform.position += selfTranform.forward * z * moveSpeed * Time.deltaTime + selfTranform.right * x * moveSpeed * Time.deltaTime;
 	}
 
 	public void Jump(){
-		if(Physics.Raycast(selfTranform.position, Vector3.down, 1.5f)){
-			selfRigidbody.AddForce(Vector3.up * 1f, ForceMode.Impulse);
+		bool onGround = Physics.Raycast(GetJumpPoint(1, 1), Vector3.down, 1.5f);
+		onGround |= Physics.Raycast(GetJumpPoint(-1, 1), Vector3.down, 1.5f);
+		onGround |= Physics.Raycast(GetJumpPoint(1, -1), Vector3.down, 1.5f);
+		onGround |= Physics.Raycast(GetJumpPoint(-1, -1), Vector3.down, 1.5f);
+		if(onGround){
+			selfRigidbody.velocity = Vector3.up * jumpForce;
 		}
+	}
+
+	private Vector3 GetJumpPoint(int x, int z){
+		return selfTranform.position + new Vector3((x * selfTranform.localScale.x) / 2, 0, (z * selfTranform.localScale.z) / 2);
 	}
 
 	public void Rotate(float vertical, float horizontal){

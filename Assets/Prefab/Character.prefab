@@ -202,6 +202,7 @@ MonoBehaviour:
   cameraVerticalSpeed: 10
   minAngleRotation: -20
   maxAngleRotation: 90
+  jumpForce: 0
   selfCamera: {fileID: 4793997356287884}
 --- !u!124 &124053548339739648
 Behaviour:

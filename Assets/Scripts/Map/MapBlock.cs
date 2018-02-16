@@ -58,6 +58,8 @@ public class MapBlock : MonoBehaviour {
 
 	public Neighbours neighbours; 
 
+	public int blockType;
+
 	[HideInInspector]
 	public Renderer selfRenderer;
 
