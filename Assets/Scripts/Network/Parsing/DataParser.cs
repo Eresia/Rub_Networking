@@ -15,7 +15,7 @@ public abstract class DataParser {
 		formatter = new BinaryFormatter();
 	}
 
-	public abstract void Parse(NetworkObject network, IPEndPoint client, byte[] data, ConcurrentQueue<NetworkAction> actionQueue);
+	public abstract void Parse(IPEndPoint client, byte[] data, ConcurrentQueue<NetworkAction> actionQueue);
 
 	public byte[] ToBytes(Data data){
 		byte[] result;

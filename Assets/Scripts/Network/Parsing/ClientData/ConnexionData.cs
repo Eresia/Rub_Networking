@@ -5,13 +5,15 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 
+[System.Serializable]
 public class ConnexionData : ClientData {
 
-	protected override void Execute(Server server, IPEndPoint actualClient){
-		
+	protected override void Execute(ServerInformations serverInformations, IPEndPoint actualClient){
+		serverInformations.server.clients.Add(actualClient);
+		serverInformations.server.SendData(actualClient, new AcceptConnexionData(serverInformations.world.worldGeneration));
 	}
 
-	protected override bool Validate(Server server, IPEndPoint actualClient){
-		return false;
+	protected override bool Validate(ServerInformations serverInformations, IPEndPoint actualClient){
+		return !IsConnected(serverInformations.server, actualClient);
 	}
 }

@@ -6,18 +6,27 @@ using System;
 using System.Text;
 using System.Net;
 using System.Net.Sockets;
+
 public class Server : NetworkObject {
 
 	[HideInInspector]
 	public List<IPEndPoint> clients;
 
-	public void Launch(int port){
+	private ServerInformations serverInformations;
+
+	public void Launch(int port, World world){
 		clients = new List<IPEndPoint>();
+		SetServerInformations(world);
 		base.Launch(IPAddress.Any, port);
 	}
 
+	private void SetServerInformations(World world){
+		serverInformations.server = this;
+		serverInformations.world = world;
+	}
+
 	protected override DataParser GetParser(){
-		return new ServerParser(clients);
+		return new ServerParser(serverInformations);
 	}
 
 	public void SendDataToAllClients(Data message){

@@ -6,6 +6,7 @@ using System;
 using System.Text;
 using System.Net;
 using System.Net.Sockets;
+
 public abstract class NetworkObject : MonoBehaviour {
 
 	public int maxActionByFrame;
@@ -24,6 +25,7 @@ public abstract class NetworkObject : MonoBehaviour {
 		receivePoint = new IPEndPoint(address, port);
 		actionQueue = new ConcurrentQueue<NetworkAction>();
 		parser = GetParser();
+		StartCoroutine(MakeActionsCoroutine());
 		socket.BeginReceive(new AsyncCallback(ReceiveCallback), receivePoint);
 	}
 
@@ -55,7 +57,7 @@ public abstract class NetworkObject : MonoBehaviour {
 			IPEndPoint sender = (IPEndPoint) asyncResult.AsyncState;
 			byte[] buffer = socket.EndReceive(asyncResult, ref sender);
 
-			parser.Parse(this, sender, buffer, actionQueue);
+			parser.Parse(sender, buffer, actionQueue);
 
 			socket.BeginReceive(new AsyncCallback(ReceiveCallback), receivePoint);
 		}
@@ -83,6 +85,13 @@ public abstract class NetworkObject : MonoBehaviour {
 		catch (Exception err)
 		{
 			Debug.Log(err);
+			socket.Close();
+		}
+	}
+
+	void OnApplicationQuit()
+	{
+		if(socket != null){
 			socket.Close();
 		}
 	}

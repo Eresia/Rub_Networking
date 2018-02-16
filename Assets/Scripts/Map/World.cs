@@ -5,20 +5,43 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class World : MonoBehaviour {
 
+	[System.Serializable]
+	public struct WorldGeneration{
+		public int mapWidth;
+		public int mapLength;
+		public float mapSeed;
+		public float biomeSeed;
+
+		public WorldGeneration(int mapWidth, int mapLength, float mapSeed, float biomeSeed){
+			this.mapWidth = mapWidth;
+			this.mapLength = mapLength;
+			this.mapSeed = mapSeed;
+			this.biomeSeed = biomeSeed;
+		}
+	}
+
 	public MapBlock baseMapPrefab;
 	public MapBlock[] blockPrefabs;
 
 	[HideInInspector]
 	public Transform selfTransform;
 
+	[HideInInspector]
+	public WorldGeneration worldGeneration;
+
 	void Awake () {
 		selfTransform = GetComponent<Transform>();
 	}
 
 	public void GenerateMap(int width, int length, float floatScale, float biomeSeed){
+		GenerateMap(new WorldGeneration(width, length, floatScale, biomeSeed));
+	}
+
+	public void GenerateMap(WorldGeneration worldGeneration){
+		this.worldGeneration = worldGeneration;
 		float blockSize = baseMapPrefab.GetComponent<Transform>().localScale.x/* + 0.05f*/;
-		int maxHeight = Mathf.RoundToInt(floatScale) + 1;
-		MapBlock[,,] mapTable = new MapBlock[width,length,maxHeight];
+		int maxHeight = Mathf.RoundToInt(worldGeneration.mapSeed) + 1;
+		MapBlock[,,] mapTable = new MapBlock[worldGeneration.mapWidth, worldGeneration.mapLength, maxHeight];
 		// for(int i = 0; i < mapTable.Length; i++){
 		// 	mapTable[i] = new MapBlock[length][];
 		// 	for(int j = 0; j < mapTable[i].Length; j++){
@@ -26,12 +49,12 @@ public class World : MonoBehaviour {
 		// 	}
 		// }
 
-		for(int i = 0; i < width; i++){
-			for(int j = 0; j < length; j++){
-				int iPos = i + (-width / 2);
-				int jPos = j + (-length / 2);
+		for(int i = 0; i < worldGeneration.mapWidth; i++){
+			for(int j = 0; j < worldGeneration.mapLength; j++){
+				int iPos = i + (-worldGeneration.mapWidth / 2);
+				int jPos = j + (-worldGeneration.mapLength / 2);
 
-				int biomeNoise = (int) (MakePerlinNoise(i*biomeSeed, j*biomeSeed, blockPrefabs.Length + biomeSeed));
+				int biomeNoise = (int) (MakePerlinNoise(i * worldGeneration.biomeSeed, j * worldGeneration.biomeSeed, blockPrefabs.Length + worldGeneration.biomeSeed));
 				
 				MapBlock prefab;
 				if(((iPos != 0) || (jPos != 0))){
@@ -52,7 +75,7 @@ public class World : MonoBehaviour {
 					// 	break;
 
 					default:
-						int flatNoise =  Mathf.RoundToInt (MakePerlinNoise(i, j, floatScale));
+						int flatNoise =  Mathf.RoundToInt (MakePerlinNoise(i, j, worldGeneration.mapSeed));
 						blockHeight = Mathf.Max(flatNoise, 2);
 						break;
 				}

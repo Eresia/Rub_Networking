@@ -9,13 +9,13 @@ using System.IO;
 
 public class ServerParser : DataParser {
 
-	private List<IPEndPoint> clients;
+	private ServerInformations serverInformations;
 
-	public ServerParser(List<IPEndPoint> clients) : base(){
-		this.clients = clients;
+	public ServerParser(ServerInformations serverInformations){
+		this.serverInformations = serverInformations;
 	}
 
-	public override void Parse(NetworkObject network, IPEndPoint client, byte[] data, ConcurrentQueue<NetworkAction> actionQueue){
+	public override void Parse(IPEndPoint client, byte[] data, ConcurrentQueue<NetworkAction> actionQueue){
 		try{
 			ClientData parsedData;
 			using (var ms = new MemoryStream())
@@ -29,7 +29,7 @@ public class ServerParser : DataParser {
 				}
 			}
 
-			parsedData.ValidateAndExecute((Server) network, client);
+			parsedData.ValidateAndExecute(serverInformations, client);
 
 		} catch(BadDataException e){
 			Debug.LogWarning("Bad Message ! " + e.Message);

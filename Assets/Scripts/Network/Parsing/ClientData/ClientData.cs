@@ -5,18 +5,23 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 
+[System.Serializable]
 public abstract class ClientData : Data {
 
-	public void ValidateAndExecute(Server server, IPEndPoint actualClient){
-		if(Validate(server, actualClient)){
-			Execute(server, actualClient);
+	public void ValidateAndExecute(ServerInformations serverInformations, IPEndPoint actualClient){
+		if(Validate(serverInformations, actualClient)){
+			Execute(serverInformations, actualClient);
 		}
 		else{
 			throw new BadDataException("Data is corrupted");
 		}
 	}
 
-	protected abstract void Execute(Server server, IPEndPoint actualClient);
+	protected abstract void Execute(ServerInformations server, IPEndPoint actualClient);
 
-	protected abstract bool Validate(Server server, IPEndPoint actualClient);
+	protected abstract bool Validate(ServerInformations server, IPEndPoint actualClient);
+
+	protected bool IsConnected(Server server, IPEndPoint actualClient){
+		return server.clients.Contains(actualClient);
+	}
 }

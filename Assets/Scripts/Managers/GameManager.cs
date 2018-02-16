@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class GameManager : MonoBehaviour {
 
@@ -17,13 +18,19 @@ public class GameManager : MonoBehaviour {
 
 	public GameObject pointerCanvas;
 	public GameObject menuCanvas;
+	public Text errorText;
 
 	[Space]
-	public InputField serverPort;
+
+	public Server server;
+	public Client client;
 
 	[Space]
-	public InputField clientIp;
-	public InputField clientPort;
+	public Text serverPort;
+
+	[Space]
+	public Text clientIp;
+	public Text clientPort;
 	
 
 	[Space]
@@ -46,16 +53,29 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void LaunchServer(){
-		map.GenerateMap(mapWidth, mapLength, GenerateRandomSeed(heightMin, heightMax), GenerateRandomSeed(0.08f, 0.12f));
-		serverCamera.gameObject.SetActive(true);
-		CommonLaunch();
+		try{
+			int port = int.Parse(serverPort.text);
+			map.GenerateMap(mapWidth, mapLength, GenerateRandomSeed(heightMin, heightMax), GenerateRandomSeed(0.08f, 0.12f));
+			serverCamera.gameObject.SetActive(true);
+			server.Launch(port, map);
+			CommonLaunch();
+		} catch(FormatException){
+			errorText.text = "Port need to be a number";
+		}
+		
 	}
 
 	public void LaunchClient(){
-		map.GenerateMap(mapWidth, mapLength, GenerateRandomSeed(heightMin, heightMax), GenerateRandomSeed(0.08f, 0.12f));
-		character.gameObject.SetActive(true);
-		pointerCanvas.gameObject.SetActive(true);
-		CommonLaunch();
+		try{
+			int port = int.Parse(clientPort.text);
+			pointerCanvas.gameObject.SetActive(true);
+			serverCamera.gameObject.SetActive(true);
+			client.Launch(clientIp.text, port, map, character);
+			CommonLaunch();
+		} catch(FormatException){
+			errorText.text = "Port need to be a number";
+
+		}
 	}
 
 	private void CommonLaunch(){
