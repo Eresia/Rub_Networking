@@ -20,12 +20,10 @@ public abstract class DataParser {
 	public byte[] ToBytes(Data data){
 		byte[] result;
 
-		using (var ms = new MemoryStream())
-		{
-			formatter.Serialize(ms, data);
-			result = ms.ToArray();
-			ms.Close();
-		}
+		MemoryStream memoryStream = new MemoryStream();
+		formatter.Serialize(memoryStream, data);
+		result = memoryStream.GetBuffer();
+		memoryStream.Close();
 
 		return result;
 	}

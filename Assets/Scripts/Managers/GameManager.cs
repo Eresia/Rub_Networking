@@ -74,7 +74,6 @@ public class GameManager : MonoBehaviour {
 			CommonLaunch();
 		} catch(FormatException){
 			errorText.text = "Port need to be a number";
-
 		}
 	}
 

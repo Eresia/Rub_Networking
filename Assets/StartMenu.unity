@@ -557,6 +557,7 @@ GameObject:
   m_Component:
   - component: {fileID: 469695056}
   - component: {fileID: 469695057}
+  - component: {fileID: 469695058}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -604,6 +605,18 @@ MonoBehaviour:
   mapLength: 60
   heightMin: 5
   heightMax: 9
+--- !u!114 &469695058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 469695055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bca13a4c424a7614e8a2754d287923b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  verboseLevel: 2
 --- !u!1001 &476811939
 Prefab:
   m_ObjectHideFlags: 0

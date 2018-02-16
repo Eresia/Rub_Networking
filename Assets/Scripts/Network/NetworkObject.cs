@@ -19,18 +19,21 @@ public abstract class NetworkObject : MonoBehaviour {
 
 	private DataParser parser;
 
+	private bool isClosed;
+
 	public virtual void Launch(IPAddress address, int port)
 	{
-		socket = new UdpClient();
+		isClosed = false;
 		receivePoint = new IPEndPoint(address, port);
+		socket = new UdpClient(receivePoint);
 		actionQueue = new ConcurrentQueue<NetworkAction>();
 		parser = GetParser();
 		StartCoroutine(MakeActionsCoroutine());
-		socket.BeginReceive(new AsyncCallback(ReceiveCallback), receivePoint);
+		socket.BeginReceive(new AsyncCallback(ReceiveCallback), new IPEndPoint(0, 0));
 	}
 
 	private IEnumerator MakeActionsCoroutine(){
-		while(socket.Client != null){
+		while(!isClosed){
 			int nbAction = 0;
 			while((!actionQueue.IsEmpty) && (nbAction < maxActionByFrame)){
 				NetworkAction newAction;
@@ -43,9 +46,14 @@ public abstract class NetworkObject : MonoBehaviour {
 		}
 	}
 
+	public void AddMainThreadAction(NetworkAction action){
+		actionQueue.Enqueue(action);
+	}
+
 	public void SendData(IPEndPoint client, Data message){
 		if(message != null){
 			byte[] buffer = parser.ToBytes(message);
+			CustomDebug.Log("Send : " + message.GetType(), VerboseLevel.ALL);
 			socket.BeginSend(buffer, buffer.Length, client, SendCallback, null);
 		}
 	}
@@ -63,12 +71,12 @@ public abstract class NetworkObject : MonoBehaviour {
 		}
 		catch (ObjectDisposedException){
 			Debug.Log("Connexion closed");
-			socket.Close();
+			Close();
 		}
 		catch (Exception err)
 		{
-			Debug.Log(err);
-			socket.Close();
+			Close();
+			Debug.LogException(err);
 		}
 	}
 
@@ -80,19 +88,24 @@ public abstract class NetworkObject : MonoBehaviour {
 		}
 		catch (ObjectDisposedException){
 			Debug.Log("Connexion closed");
-			socket.Close();
+			Close();
 		}
 		catch (Exception err)
 		{
-			Debug.Log(err);
-			socket.Close();
+			Close();
+			Debug.LogException(err);
 		}
+	}
+
+	public void Close(){
+		socket.Close();
+		isClosed = true;
 	}
 
 	void OnApplicationQuit()
 	{
 		if(socket != null){
-			socket.Close();
+			Close();
 		}
 	}
 }

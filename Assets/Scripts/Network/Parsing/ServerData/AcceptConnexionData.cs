@@ -12,12 +12,13 @@ public class AcceptConnexionData : ServerData {
 	}
 
 	protected override void Execute(ClientInformations clientInformations){
+		CustomDebug.Log("Execute Accept Connexion", VerboseLevel.ALL);
 		clientInformations.client.isConnected = true;
-		clientInformations.world.GenerateMap(worldGeneration);
-		clientInformations.character.gameObject.SetActive(true);
+		clientInformations.client.AddMainThreadAction(new CreateMapAction(clientInformations.world, worldGeneration, clientInformations.character));
 	}
 
 	protected override bool Validate(ClientInformations clientInformations){
+		CustomDebug.Log("Try to validate Accept Connexion", VerboseLevel.ALL);
 		return !IsConnected(clientInformations.client);
 	}
 }

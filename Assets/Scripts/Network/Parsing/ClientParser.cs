@@ -17,24 +17,21 @@ public class ClientParser : DataParser {
 
 	public override void Parse(IPEndPoint client, byte[] data, ConcurrentQueue<NetworkAction> actionQueue){
 		try{
-			ServerData parsedData;
-			using (var ms = new MemoryStream())
-			{
-				object obj = formatter.Deserialize(ms);
-				if(obj is ServerData){
-					parsedData = (ServerData) obj;
-				}
-				else{
-					throw new BadDataException("Not a valid Data");
-				}
+			MemoryStream memoryStream = new MemoryStream(data);
+			object obj = formatter.Deserialize(memoryStream);
+
+			if(obj is ServerData){
+				ServerData parsedData = (ServerData) obj;
+				CustomDebug.Log("Object received : " + parsedData.GetType(), VerboseLevel.ALL);
+				parsedData.ValidateAndExecute(clientInformations);
 			}
-
-			parsedData.ValidateAndExecute(clientInformations);
-
+			else{
+				throw new BadDataException("Not a valid Data " + obj.GetType());
+			}
 		} catch(BadDataException e){
 			Debug.LogWarning("Bad Message ! " + e.Message);
-		} catch(Exception e){
-			Debug.LogError(e);
+		} catch(Exception err){
+			throw err;
 		}
 	}
 }

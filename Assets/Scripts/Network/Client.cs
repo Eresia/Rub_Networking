@@ -13,15 +13,21 @@ public class Client : NetworkObject {
 
 	private ClientInformations clientInformations;
 
+	private IPEndPoint serverEndPoint;
+
 	public void Launch(string address, int port, World world, Character character){
+		IPAddress serverAddress = IPAddress.Parse(address);
 		isConnected = false;
 		SetClientInformations(world, character);
-		base.Launch(IPAddress.Parse(address), port);
+
+		serverEndPoint = new IPEndPoint(serverAddress, port);
+		
+		base.Launch(serverAddress, port + 1);
 		SendDataToServer(new ConnexionData());
 	}
 
 	public void SendDataToServer(ClientData message){
-		SendData(receivePoint, message);
+		SendData(serverEndPoint, message);
 	}
 
 	private void SetClientInformations(World world, Character character){

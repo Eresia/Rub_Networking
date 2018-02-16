@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public abstract class ServerData : Data{
 
 	public void ValidateAndExecute(ClientInformations clientInformations){
+		
 		if(Validate(clientInformations)){
 			Execute(clientInformations);
 		}
