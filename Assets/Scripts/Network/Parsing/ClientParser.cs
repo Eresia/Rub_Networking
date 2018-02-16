@@ -23,7 +23,7 @@ public class ClientParser : DataParser {
 			if(obj is ServerData){
 				ServerData parsedData = (ServerData) obj;
 				CustomDebug.Log("Object received : " + parsedData.GetType(), VerboseLevel.ALL);
-				parsedData.ValidateAndExecute(clientInformations);
+				parsedData.ValidateAndExecute(clientInformations, client);
 			}
 			else{
 				throw new BadDataException("Not a valid Data " + obj.GetType());

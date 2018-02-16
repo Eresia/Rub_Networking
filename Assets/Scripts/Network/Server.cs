@@ -17,7 +17,7 @@ public class Server : NetworkObject {
 	public void Launch(int port, World world){
 		clients = new List<IPEndPoint>();
 		SetServerInformations(world);
-		base.Launch(IPAddress.Any, port);
+		base.Launch(new UdpClient(new IPEndPoint(IPAddress.Any, port)));
 	}
 
 	private void SetServerInformations(World world){

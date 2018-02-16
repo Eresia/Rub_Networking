@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Net;
+using System.Net.Sockets;
+
 
 [System.Serializable]
 public class AcceptConnexionData : ServerData {
@@ -17,8 +20,8 @@ public class AcceptConnexionData : ServerData {
 		clientInformations.client.AddMainThreadAction(new CreateMapAction(clientInformations.world, worldGeneration, clientInformations.character));
 	}
 
-	protected override bool Validate(ClientInformations clientInformations){
+	protected override bool Validate(ClientInformations clientInformations, IPEndPoint sender){
 		CustomDebug.Log("Try to validate Accept Connexion", VerboseLevel.ALL);
-		return !IsConnected(clientInformations.client);
+		return !IsConnected(clientInformations.client, sender);
 	}
 }

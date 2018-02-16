@@ -12,8 +12,6 @@ public abstract class NetworkObject : MonoBehaviour {
 	public int maxActionByFrame;
 
 	protected UdpClient socket;
-		
-	protected IPEndPoint receivePoint;
 
 	protected ConcurrentQueue<NetworkAction> actionQueue;
 
@@ -21,15 +19,14 @@ public abstract class NetworkObject : MonoBehaviour {
 
 	private bool isClosed;
 
-	public virtual void Launch(IPAddress address, int port)
+	protected virtual void Launch(UdpClient socket)
 	{
 		isClosed = false;
-		receivePoint = new IPEndPoint(address, port);
-		socket = new UdpClient(receivePoint);
+		this.socket = socket;
 		actionQueue = new ConcurrentQueue<NetworkAction>();
 		parser = GetParser();
 		StartCoroutine(MakeActionsCoroutine());
-		socket.BeginReceive(new AsyncCallback(ReceiveCallback), new IPEndPoint(0, 0));
+		socket.BeginReceive(new AsyncCallback(ReceiveCallback), null);
 	}
 
 	private IEnumerator MakeActionsCoroutine(){
@@ -62,12 +59,12 @@ public abstract class NetworkObject : MonoBehaviour {
 
 	public void ReceiveCallback(IAsyncResult asyncResult){
 		try{
-			IPEndPoint sender = (IPEndPoint) asyncResult.AsyncState;
+			IPEndPoint sender = new IPEndPoint(0, 0);
 			byte[] buffer = socket.EndReceive(asyncResult, ref sender);
 
 			parser.Parse(sender, buffer, actionQueue);
 
-			socket.BeginReceive(new AsyncCallback(ReceiveCallback), receivePoint);
+			socket.BeginReceive(new AsyncCallback(ReceiveCallback), null);
 		}
 		catch (ObjectDisposedException){
 			Debug.Log("Connexion closed");

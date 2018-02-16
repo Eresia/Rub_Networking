@@ -11,9 +11,11 @@ public class Client : NetworkObject {
 	[HideInInspector]
 	public bool isConnected;
 
-	private ClientInformations clientInformations;
+	[HideInInspector]
 
-	private IPEndPoint serverEndPoint;
+	public IPEndPoint serverEndPoint;
+
+	private ClientInformations clientInformations;
 
 	public void Launch(string address, int port, World world, Character character){
 		IPAddress serverAddress = IPAddress.Parse(address);
@@ -22,7 +24,7 @@ public class Client : NetworkObject {
 
 		serverEndPoint = new IPEndPoint(serverAddress, port);
 		
-		base.Launch(serverAddress, port + 1);
+		base.Launch(new UdpClient());
 		SendDataToServer(new ConnexionData());
 	}
 
