@@ -14,26 +14,74 @@ public class Network : MonoBehaviour {
 	public bool isLaunched;
 
 	[HideInInspector]
-	public NetworkObject networkObject;
+	public Server server;
+
+	[HideInInspector]
+	public Client client;
+
+	private int objectsId;
+
+	private Dictionary<int, SynchronizedObject> synchronizedObjects;
 
 	private void Awake() {
 		isLaunched = false;
+		objectsId = 0;
+		synchronizedObjects = new Dictionary<int, SynchronizedObject>();
 	}
 
 	public void LaunchServer(int port, World world){
 		isServer = true;
-		networkObject = new Server(this, port, world, serverMaxAction);
-		CommonLaunch();
+		server = new Server(this, port, world, serverMaxAction);
+		server.Launch();
+		isLaunched = true;
 	}
 
 	public void LaunchClient(string address, int port, World world){
 		isServer = false;
-		networkObject = new Client(this, address, port, world, clientMaxAction);
-		CommonLaunch();
+		client = new Client(this, address, port, world, clientMaxAction);
+		client.Launch();
+		isLaunched = true;
 	}
 
-	private void CommonLaunch(){
-		networkObject.Launch();
-		isLaunched = true;
+	public int RequireNewObjectId(){
+		int id = objectsId;
+		objectsId++;
+		return id;
+	}
+
+	public bool CreateSynchronizedObject(int i, SynchronizedObject obj){
+		if(HasSynchronizedObject(i)){
+			return false;
+		}
+
+		synchronizedObjects.Add(i, obj);
+		return true;
+	}
+
+	public bool HasSynchronizedObject(int i){
+		return synchronizedObjects.ContainsKey(i);
+	}
+
+	public SynchronizedObject GetSynchronizedObject(int i){
+		if(HasSynchronizedObject(i)){
+			return synchronizedObjects[i];
+		}
+
+		return null;
+	}
+
+	public void RemoveSynchronizedObject(int i){
+		if(HasSynchronizedObject(i)){
+			synchronizedObjects.Remove(i);
+		}
+	}
+
+	public NetworkObject GetNetworkObject(){
+		if(isServer){
+			return server;
+		}
+		else{
+			return client;
+		}
 	}
 }

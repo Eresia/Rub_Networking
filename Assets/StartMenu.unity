@@ -559,6 +559,7 @@ GameObject:
   - component: {fileID: 469695057}
   - component: {fileID: 469695058}
   - component: {fileID: 469695059}
+  - component: {fileID: 469695060}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -592,6 +593,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   map: {fileID: 1055563759}
   playerGestion: {fileID: 469695059}
+  prefabGestion: {fileID: 0}
   menuCamera: {fileID: 1301688213}
   serverCamera: {fileID: 930973806}
   pointerCanvas: {fileID: 1538274203}
@@ -630,6 +632,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterPrefab: {fileID: 114596973796331100, guid: ba73ac6dc1b1a0b40b737abcf4c74706,
     type: 2}
+--- !u!114 &469695060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 469695055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 194466dcf91001f488cafc058c549906, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  synchronizedObjectPrefabs:
+  - {fileID: 0}
 --- !u!1001 &476811939
 Prefab:
   m_ObjectHideFlags: 0

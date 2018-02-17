@@ -9,13 +9,24 @@ using System.Net.Sockets;
 public abstract class ServerData : Data{
 
 	[System.NonSerialized]
-	public ClientInformations clientInformations;
+	protected ClientInformations clientInformations;
 
 	[System.NonSerialized]
-	public IPEndPoint sender;
+	protected IPEndPoint sender;
+
+	[System.NonSerialized]
+	private bool alreadyValidate;
 
 	protected bool IsConnected(){
 		return (sender == clientInformations.client.serverEndPoint) && (clientInformations.client.isConnected);
+	}
+
+	public bool OnlyValidate(ClientInformations clientInformations, IPEndPoint sender){
+		this.clientInformations = clientInformations;
+		this.sender = sender;
+
+		alreadyValidate = Validate();
+		return alreadyValidate;
 	}
 
 	public void ValidateAndExecute(ClientInformations clientInformations, IPEndPoint sender){
@@ -23,7 +34,7 @@ public abstract class ServerData : Data{
 		this.clientInformations = clientInformations;
 		this.sender = sender;
 		
-		if(Validate()){
+		if(alreadyValidate || Validate()){
 			if(Execute()){
 				clientInformations.client.AddMainThreadAction(this);
 			}

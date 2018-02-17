@@ -16,8 +16,9 @@ public class ClientParser : DataParser {
 	}
 
 	public override void Parse(IPEndPoint client, byte[] data){
+		MemoryStream memoryStream = new MemoryStream(data);
+		
 		try{
-			MemoryStream memoryStream = new MemoryStream(data);
 			object obj = formatter.Deserialize(memoryStream);
 
 			if(obj is ServerData){
@@ -33,5 +34,7 @@ public class ClientParser : DataParser {
 		} catch(Exception err){
 			throw err;
 		}
+
+		memoryStream.Close();
 	}
 }

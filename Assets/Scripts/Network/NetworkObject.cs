@@ -11,11 +11,12 @@ public abstract class NetworkObject {
 
 	public bool isClosed;
 
+	[HideInInspector]
+	public Network network;
+
 	protected UdpClient socket;
 
 	protected ConcurrentQueue<Data> actionQueue;
-
-	private Network network;
 
 	private DataParser parser;
 
@@ -80,6 +81,10 @@ public abstract class NetworkObject {
 			Debug.Log("Connexion closed");
 			Close();
 		}
+		catch (SocketException){
+			Debug.Log("Connexion closed");
+			Close();
+		}
 		catch (Exception err)
 		{
 			Close();
@@ -92,10 +97,6 @@ public abstract class NetworkObject {
 			if(socket.EndSend(asyncResult) == 0){
 				Debug.LogWarning("Send empty message");
 			}
-		}
-		catch (ObjectDisposedException){
-			Debug.Log("Connexion closed");
-			Close();
 		}
 		catch (Exception err)
 		{

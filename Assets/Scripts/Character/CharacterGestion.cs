@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerGestion : MonoBehaviour {
+public class CharacterGestion : MonoBehaviour {
 
 	public Character characterPrefab;
 
@@ -17,7 +17,7 @@ public class PlayerGestion : MonoBehaviour {
 		Character newCharacter = null;
 		if(!characters.ContainsKey(id)){
 			newCharacter = Instantiate<Character>(characterPrefab);
-			Vector3 characterPosition =  world.GetRandomSpawnPosition();
+			Vector3 characterPosition = world.GetRandomSpawnPosition();
 			characterPosition.y += newCharacter.selfTranform.localScale.y;
 			newCharacter.selfTranform.position = characterPosition;
 			characters.Add(id, newCharacter);

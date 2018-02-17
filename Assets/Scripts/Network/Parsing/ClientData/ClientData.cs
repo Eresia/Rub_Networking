@@ -14,6 +14,9 @@ public abstract class ClientData : Data {
 	[System.NonSerialized]
 	public IPEndPoint actualClient;
 
+	[System.NonSerialized]
+	private bool alreadyValidate;
+
 	protected bool IsConnected(){
 		Debug.Log(serverInformations);
 		Debug.Log(serverInformations.server);
@@ -21,11 +24,19 @@ public abstract class ClientData : Data {
 		return serverInformations.server.clients.ContainsKey(actualClient);
 	}
 
+	public bool OnlyValidate(ServerInformations serverInformations, IPEndPoint actualClient){
+		this.serverInformations = serverInformations;
+		this.actualClient = actualClient;
+
+		alreadyValidate = Validate();
+		return alreadyValidate;
+	}
+
 	public void ValidateAndExecute(ServerInformations serverInformations, IPEndPoint actualClient){
 		this.serverInformations = serverInformations;
 		this.actualClient = actualClient;
 
-		if(Validate()){
+		if(alreadyValidate || Validate()){
 			if(Execute()){
 				serverInformations.server.AddMainThreadAction(this);
 			}
