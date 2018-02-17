@@ -11,7 +11,8 @@ public class Character : MonoBehaviour {
 	public float minAngleRotation;
 	public float maxAngleRotation;
 
-	private Transform selfTranform;
+	[HideInInspector]
+	public Transform selfTranform;
 	private Rigidbody selfRigidbody;
 
 	[SerializeField]
@@ -29,11 +30,11 @@ public class Character : MonoBehaviour {
 
 	void FixedUpdate()
 	{
-		Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-		Rotate(Input.GetAxis ("Mouse X"), Input.GetAxis ("Mouse Y"));
-		if(Input.GetButtonDown ("Jump")){
-			Jump();
-		}
+		// Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+		// Rotate(Input.GetAxis ("Mouse X"), Input.GetAxis ("Mouse Y"));
+		// if(Input.GetButtonDown ("Jump")){
+		// 	Jump();
+		// }
 	}
 
 	public void Move(float x, float z){

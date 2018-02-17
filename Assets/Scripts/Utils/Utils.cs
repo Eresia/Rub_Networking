@@ -8,10 +8,16 @@ public struct SerializableVector3{
 	public float y;
 	public float z;
 
+	public SerializableVector3(float x, float y, float z){
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
+
 	public SerializableVector3(Vector3 from){
-		x = from.x;
-		y = from.y;
-		z = from.z;
+		this.x = from.x;
+		this.y = from.y;
+		this.z = from.z;
 	}
 
 	public SerializableVector3(Quaternion from) : this(from.eulerAngles){ }

@@ -8,20 +8,33 @@ using System.Net.Sockets;
 [System.Serializable]
 public abstract class ClientData : Data {
 
+	[System.NonSerialized]
+	public ServerInformations serverInformations;
+
+	[System.NonSerialized]
+	public IPEndPoint actualClient;
+
+	protected bool IsConnected(){
+		return serverInformations.server.clients.ContainsKey(actualClient);
+	}
+
 	public void ValidateAndExecute(ServerInformations serverInformations, IPEndPoint actualClient){
-		if(Validate(serverInformations, actualClient)){
-			Execute(serverInformations, actualClient);
+		this.serverInformations = serverInformations;
+		this.actualClient = actualClient;
+
+		if(Validate()){
+			if(Execute()){
+				serverInformations.server.AddMainThreadAction(this);
+			}
 		}
 		else{
 			throw new BadDataException("Data is corrupted");
 		}
 	}
 
-	protected abstract void Execute(ServerInformations server, IPEndPoint actualClient);
+	protected abstract bool Validate();
 
-	protected abstract bool Validate(ServerInformations server, IPEndPoint actualClient);
+	protected abstract bool Execute();
 
-	protected bool IsConnected(Server server, IPEndPoint actualClient){
-		return server.clients.Contains(actualClient);
-	}
+	public abstract void ExecuteOnMainThread();
 }

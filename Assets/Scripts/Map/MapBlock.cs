@@ -58,7 +58,9 @@ public class MapBlock : MonoBehaviour {
 
 	public Neighbours neighbours; 
 
-	public int blockType;
+	public int fixedHeight;
+
+	public bool canSpawnOn;
 
 	[HideInInspector]
 	public Renderer selfRenderer;

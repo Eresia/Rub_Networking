@@ -14,14 +14,18 @@ public class AcceptConnexionData : ServerData {
 		this.worldGeneration = worldGeneration;
 	}
 
-	protected override void Execute(ClientInformations clientInformations){
-		CustomDebug.Log("Execute Accept Connexion", VerboseLevel.ALL);
-		clientInformations.client.isConnected = true;
-		clientInformations.client.AddMainThreadAction(new CreateMapAction(clientInformations.world, worldGeneration, clientInformations.character));
+	protected override bool Validate(){
+		CustomDebug.Log("Try to validate Accept Connexion", VerboseLevel.ALL);
+		return !IsConnected();
 	}
 
-	protected override bool Validate(ClientInformations clientInformations, IPEndPoint sender){
-		CustomDebug.Log("Try to validate Accept Connexion", VerboseLevel.ALL);
-		return !IsConnected(clientInformations.client, sender);
+	protected override bool Execute(){
+		CustomDebug.Log("Execute Accept Connexion", VerboseLevel.ALL);
+		clientInformations.client.isConnected = true;
+		return true;
+	}
+
+	public override void ExecuteOnMainThread(){
+		clientInformations.world.GenerateMap(worldGeneration);
 	}
 }

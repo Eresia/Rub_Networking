@@ -10,5 +10,4 @@ public struct ServerInformations{
 public struct ClientInformations{
 	public Client client;
 	public World world;
-	public Character character;
 }

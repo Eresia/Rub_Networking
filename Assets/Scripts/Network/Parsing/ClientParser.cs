@@ -15,7 +15,7 @@ public class ClientParser : DataParser {
 		this.clientInformations = clientInformations;
 	}
 
-	public override void Parse(IPEndPoint client, byte[] data, ConcurrentQueue<NetworkAction> actionQueue){
+	public override void Parse(IPEndPoint client, byte[] data){
 		try{
 			MemoryStream memoryStream = new MemoryStream(data);
 			object obj = formatter.Deserialize(memoryStream);

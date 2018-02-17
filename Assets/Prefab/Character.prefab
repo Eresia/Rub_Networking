@@ -28,7 +28,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1443742042485794
 GameObject:
   m_ObjectHideFlags: 0
@@ -202,7 +202,8 @@ MonoBehaviour:
   cameraVerticalSpeed: 10
   minAngleRotation: -20
   maxAngleRotation: 90
-  jumpForce: 0
+  selfTranform: {fileID: 0}
+  jumpForce: 4
   selfCamera: {fileID: 4793997356287884}
 --- !u!124 &124053548339739648
 Behaviour:

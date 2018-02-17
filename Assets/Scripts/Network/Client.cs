@@ -17,10 +17,10 @@ public class Client : NetworkObject {
 
 	private ClientInformations clientInformations;
 
-	public void Launch(string address, int port, World world, Character character){
+	public void Launch(string address, int port, World world){
 		IPAddress serverAddress = IPAddress.Parse(address);
 		isConnected = false;
-		SetClientInformations(world, character);
+		SetClientInformations(world);
 
 		serverEndPoint = new IPEndPoint(serverAddress, port);
 		
@@ -32,10 +32,9 @@ public class Client : NetworkObject {
 		SendData(serverEndPoint, message);
 	}
 
-	private void SetClientInformations(World world, Character character){
+	private void SetClientInformations(World world){
 		clientInformations.client = this;
 		clientInformations.world = world;
-		clientInformations.character = character;
 	}
 
 	protected override DataParser GetParser(){

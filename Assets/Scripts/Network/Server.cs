@@ -9,13 +9,24 @@ using System.Net.Sockets;
 
 public class Server : NetworkObject {
 
+	public struct ClientToken{
+		public int id;
+
+		public ClientToken(int id){
+			this.id = id;
+		}
+	}
+
 	[HideInInspector]
-	public List<IPEndPoint> clients;
+	public Dictionary<IPEndPoint, ClientToken> clients;
 
 	private ServerInformations serverInformations;
 
+	private int actualId;
+
 	public void Launch(int port, World world){
-		clients = new List<IPEndPoint>();
+		clients = new Dictionary<IPEndPoint, ClientToken>();
+		actualId = 0;
 		SetServerInformations(world);
 		base.Launch(new UdpClient(new IPEndPoint(IPAddress.Any, port)));
 	}
@@ -30,9 +41,19 @@ public class Server : NetworkObject {
 	}
 
 	public void SendDataToAllClients(Data message){
-		foreach(IPEndPoint c in clients){
+		foreach(IPEndPoint c in clients.Keys){
 			SendData(c, message);
 		}
+	}
+
+	public int CreateNewClient(IPEndPoint newClient){
+		int id = -1;
+		if(!clients.ContainsKey(newClient)){
+			id = actualId;
+			clients.Add(newClient, new ClientToken(id));
+			actualId++;
+		}
+		return id;
 	}
 	
 }

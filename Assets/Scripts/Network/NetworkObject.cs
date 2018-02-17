@@ -13,7 +13,7 @@ public abstract class NetworkObject : MonoBehaviour {
 
 	protected UdpClient socket;
 
-	protected ConcurrentQueue<NetworkAction> actionQueue;
+	protected ConcurrentQueue<Data> actionQueue;
 
 	private DataParser parser;
 
@@ -23,7 +23,7 @@ public abstract class NetworkObject : MonoBehaviour {
 	{
 		isClosed = false;
 		this.socket = socket;
-		actionQueue = new ConcurrentQueue<NetworkAction>();
+		actionQueue = new ConcurrentQueue<Data>();
 		parser = GetParser();
 		StartCoroutine(MakeActionsCoroutine());
 		socket.BeginReceive(new AsyncCallback(ReceiveCallback), null);
@@ -33,9 +33,9 @@ public abstract class NetworkObject : MonoBehaviour {
 		while(!isClosed){
 			int nbAction = 0;
 			while((!actionQueue.IsEmpty) && (nbAction < maxActionByFrame)){
-				NetworkAction newAction;
+				Data newAction;
 				if(actionQueue.TryDequeue(out newAction)){
-					newAction.Execute();
+					newAction.ExecuteOnMainThread();
 					nbAction++;
 				}
 			}
@@ -43,7 +43,7 @@ public abstract class NetworkObject : MonoBehaviour {
 		}
 	}
 
-	public void AddMainThreadAction(NetworkAction action){
+	public void AddMainThreadAction(Data action){
 		actionQueue.Enqueue(action);
 	}
 
@@ -62,7 +62,7 @@ public abstract class NetworkObject : MonoBehaviour {
 			IPEndPoint sender = new IPEndPoint(0, 0);
 			byte[] buffer = socket.EndReceive(asyncResult, ref sender);
 
-			parser.Parse(sender, buffer, actionQueue);
+			parser.Parse(sender, buffer);
 
 			socket.BeginReceive(new AsyncCallback(ReceiveCallback), null);
 		}

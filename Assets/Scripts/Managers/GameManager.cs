@@ -7,7 +7,7 @@ using System;
 public class GameManager : MonoBehaviour {
 
 	public World map;
-	public Character character;
+	public PlayerGestion playerGestion;
 
 	[Space]
 
@@ -42,6 +42,8 @@ public class GameManager : MonoBehaviour {
 
 	public static GameManager instance;
 
+	
+
 	void Awake () {
 		if(instance != null){
 			Destroy(gameObject);
@@ -70,7 +72,7 @@ public class GameManager : MonoBehaviour {
 			int port = int.Parse(clientPort.text);
 			pointerCanvas.gameObject.SetActive(true);
 			serverCamera.gameObject.SetActive(true);
-			client.Launch(clientIp.text, port, map, character);
+			client.Launch(clientIp.text, port, map);
 			CommonLaunch();
 		} catch(FormatException){
 			errorText.text = "Port need to be a number";

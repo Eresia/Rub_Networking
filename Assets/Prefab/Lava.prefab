@@ -115,7 +115,8 @@ MonoBehaviour:
     back: {fileID: 0}
     left: {fileID: 0}
     right: {fileID: 0}
-  blockType: 0
+  fixedHeight: 2
+  canSpawnOn: 0
   selfRenderer: {fileID: 23865969675985990}
 --- !u!114 &114959976630209164
 MonoBehaviour:
