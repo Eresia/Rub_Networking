@@ -15,6 +15,9 @@ public abstract class ClientData : Data {
 	public IPEndPoint actualClient;
 
 	protected bool IsConnected(){
+		Debug.Log(serverInformations);
+		Debug.Log(serverInformations.server);
+		Debug.Log(serverInformations.server.clients);
 		return serverInformations.server.clients.ContainsKey(actualClient);
 	}
 

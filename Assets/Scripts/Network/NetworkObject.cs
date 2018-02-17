@@ -7,32 +7,42 @@ using System.Text;
 using System.Net;
 using System.Net.Sockets;
 
-public abstract class NetworkObject : MonoBehaviour {
+public abstract class NetworkObject {
 
-	public int maxActionByFrame;
+	public bool isClosed;
 
 	protected UdpClient socket;
 
 	protected ConcurrentQueue<Data> actionQueue;
 
+	private Network network;
+
 	private DataParser parser;
 
-	private bool isClosed;
+	private int maxActionPerFrame;
 
-	protected virtual void Launch(UdpClient socket)
-	{
+	public NetworkObject(){
 		isClosed = false;
-		this.socket = socket;
 		actionQueue = new ConcurrentQueue<Data>();
+	}
+
+	protected void Init(UdpClient socket, Network network, int maxActionPerFrame){
+		this.socket = socket;
+		this.network = network;
+		this.maxActionPerFrame = maxActionPerFrame;
 		parser = GetParser();
-		StartCoroutine(MakeActionsCoroutine());
+	}
+
+	public virtual void Launch()
+	{
+		network.StartCoroutine(MakeActionsCoroutine());
 		socket.BeginReceive(new AsyncCallback(ReceiveCallback), null);
 	}
 
 	private IEnumerator MakeActionsCoroutine(){
 		while(!isClosed){
 			int nbAction = 0;
-			while((!actionQueue.IsEmpty) && (nbAction < maxActionByFrame)){
+			while((!actionQueue.IsEmpty) && (nbAction < maxActionPerFrame)){
 				Data newAction;
 				if(actionQueue.TryDequeue(out newAction)){
 					newAction.ExecuteOnMainThread();

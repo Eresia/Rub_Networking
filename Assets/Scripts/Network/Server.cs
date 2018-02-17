@@ -24,14 +24,15 @@ public class Server : NetworkObject {
 
 	private int actualId;
 
-	public void Launch(int port, World world){
+	public Server(Network network, int port, World world, int maxActionPerFrame) : base(){
 		clients = new Dictionary<IPEndPoint, ClientToken>();
 		actualId = 0;
 		SetServerInformations(world);
-		base.Launch(new UdpClient(new IPEndPoint(IPAddress.Any, port)));
+		
+		Init(new UdpClient(new IPEndPoint(IPAddress.Any, port)), network, maxActionPerFrame);
 	}
 
-	private void SetServerInformations(World world){
+	protected void SetServerInformations(World world){
 		serverInformations.server = this;
 		serverInformations.world = world;
 	}

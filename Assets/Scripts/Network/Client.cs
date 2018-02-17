@@ -17,14 +17,17 @@ public class Client : NetworkObject {
 
 	private ClientInformations clientInformations;
 
-	public void Launch(string address, int port, World world){
+	public Client(Network network, string address, int port, World world, int maxActionPerFrame) : base(){
 		IPAddress serverAddress = IPAddress.Parse(address);
 		isConnected = false;
 		SetClientInformations(world);
-
 		serverEndPoint = new IPEndPoint(serverAddress, port);
-		
-		base.Launch(new UdpClient());
+
+		Init(new UdpClient(), network, maxActionPerFrame);
+	}
+
+	public override void Launch(){
+		base.Launch();
 		SendDataToServer(new ConnexionData());
 	}
 

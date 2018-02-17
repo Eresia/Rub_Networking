@@ -38,10 +38,10 @@ GameObject:
   m_Component:
   - component: {fileID: 4042979530679906}
   - component: {fileID: 33540763045544986}
-  - component: {fileID: 65801986875841692}
   - component: {fileID: 23833759171299936}
   - component: {fileID: 54850000408635464}
   - component: {fileID: 114596973796331100}
+  - component: {fileID: 64776672864971602}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -55,9 +55,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1443742042485794}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 14.374, z: 0}
-  m_LocalScale: {x: 1, y: 2.5968273, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.911411, y: 11.610943, z: -13.202399}
+  m_LocalScale: {x: 1, y: 1.5, z: 1}
   m_Children:
   - {fileID: 4793997356287884}
   m_Father: {fileID: 0}
@@ -70,7 +70,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1439192667179212}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.71, z: 0}
   m_LocalScale: {x: 1, y: 0.3850853, z: 1}
   m_Children: []
   m_Father: {fileID: 4042979530679906}
@@ -151,7 +151,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1443742042485794}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!54 &54850000408635464
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -161,14 +161,14 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 1
   m_Drag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 122
+  m_Constraints: 112
   m_CollisionDetection: 0
---- !u!65 &65801986875841692
-BoxCollider:
+--- !u!64 &64776672864971602
+MeshCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -177,8 +177,10 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Convex: 1
+  m_InflateMesh: 0
+  m_SkinWidth: 0.01
+  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!81 &81290107383451620
 AudioListener:
   m_ObjectHideFlags: 1
@@ -203,7 +205,7 @@ MonoBehaviour:
   minAngleRotation: -20
   maxAngleRotation: 90
   selfTranform: {fileID: 0}
-  jumpForce: 4
+  jumpForce: 6
   selfCamera: {fileID: 4793997356287884}
 --- !u!124 &124053548339739648
 Behaviour:

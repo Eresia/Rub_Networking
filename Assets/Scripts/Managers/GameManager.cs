@@ -22,8 +22,7 @@ public class GameManager : MonoBehaviour {
 
 	[Space]
 
-	public Server server;
-	public Client client;
+	public Network network;
 
 	[Space]
 	public Text serverPort;
@@ -59,7 +58,7 @@ public class GameManager : MonoBehaviour {
 			int port = int.Parse(serverPort.text);
 			map.GenerateMap(mapWidth, mapLength, GenerateRandomSeed(heightMin, heightMax), GenerateRandomSeed(0.08f, 0.12f));
 			serverCamera.gameObject.SetActive(true);
-			server.Launch(port, map);
+			network.LaunchServer(port, map);
 			CommonLaunch();
 		} catch(FormatException){
 			errorText.text = "Port need to be a number";
@@ -72,7 +71,7 @@ public class GameManager : MonoBehaviour {
 			int port = int.Parse(clientPort.text);
 			pointerCanvas.gameObject.SetActive(true);
 			serverCamera.gameObject.SetActive(true);
-			client.Launch(clientIp.text, port, map);
+			network.LaunchClient(clientIp.text, port, map);
 			CommonLaunch();
 		} catch(FormatException){
 			errorText.text = "Port need to be a number";
