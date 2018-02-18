@@ -52,7 +52,7 @@ public class World : MonoBehaviour {
 	public void GenerateMap(WorldGeneration worldGeneration){
 		this.worldGeneration = worldGeneration;
 		blockSize = blockPrefabs[0].GetComponent<Transform>().localScale.x/* + 0.05f*/;
-		int maxHeight = Mathf.RoundToInt(worldGeneration.mapSeed) + 2;
+		int maxHeight = Mathf.RoundToInt(worldGeneration.mapSeed) +worldGeneration.minHeight + 1;
 		mapTable = new MapBlock[worldGeneration.mapWidth, worldGeneration.mapLength, maxHeight];
 		// for(int i = 0; i < mapTable.Length; i++){
 		// 	mapTable[i] = new MapBlock[length][];
