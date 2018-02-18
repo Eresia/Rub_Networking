@@ -5,17 +5,21 @@ using UnityEngine;
 [RequireComponent(typeof(SynchronizedObject))]
 public abstract class SynchronizedElement : MonoBehaviour{
 
-    protected int owner;
+    public int owner {get ; private set;}
 
-	protected SynchronizedObject synchronizedObject;
+	protected SynchronizedObject synchronizedObject {get ; private set;}
 
-	protected Data actualData;
+	protected Data actualData {get ; private set;}
 
 	protected virtual void Awake() {
 		synchronizedObject = GetComponent<SynchronizedObject>();
 	}
 
 	public virtual void Init(int owner, bool isServer){
+		this.owner = owner;
+	}
+
+	public void SetOwner(int owner){
 		this.owner = owner;
 	}
 

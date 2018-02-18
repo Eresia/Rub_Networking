@@ -8,18 +8,18 @@ using System.Net.Sockets;
 
 public class Client : NetworkObject {
 
-	[HideInInspector]
-	public bool isConnected;
+	public bool isConnected {get ; private set;}
 
-	[HideInInspector]
+	public IPEndPoint serverEndPoint {get ; private set;}
 
-	public IPEndPoint serverEndPoint;
+	public int clientId {get ; private set;}
 
 	public ClientInformations clientInformations;
 
 	public Client(Network network, string address, int port, World world, int maxActionPerFrame) : base(){
 		IPAddress serverAddress = IPAddress.Parse(address);
 		isConnected = false;
+		clientId = -1;
 		SetClientInformations(world);
 		serverEndPoint = new IPEndPoint(serverAddress, port);
 
@@ -32,16 +32,26 @@ public class Client : NetworkObject {
 	}
 
 	public void SendData(ClientData message){
-		SendData(serverEndPoint, message);
+		try{
+			base.SendData(serverEndPoint, message);
+		} catch(ObjectDisposedException){
+			CustomDebug.LogWarning("Object disposed, Close Client", VerboseLevel.IMPORTANT);
+			socket.Close();
+			Application.Quit();
+		}
 	}
 
 	private void SetClientInformations(World world){
 		clientInformations.client = this;
 		clientInformations.world = world;
-		clientInformations.clientId = -1;
 	}
 
 	protected override DataParser GetParser(){
 		return new ClientParser(clientInformations);
+	}
+
+	public void SetConnexion(int id){
+		isConnected = true;
+		clientId = id;
 	}
 }

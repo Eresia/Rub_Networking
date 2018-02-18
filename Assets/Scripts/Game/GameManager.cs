@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour {
 	[Space]
 
 	public PrefabGestion prefabGestion;
-	public Character characterPrefab;
+	public SynchronizedCharacter characterPrefab;
 
 	[Space]
 

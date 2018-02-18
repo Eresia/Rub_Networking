@@ -8,16 +8,13 @@ public class SynchronizedObject : MonoBehaviour {
 
 	public int objectPrefabId;
 
-	[HideInInspector]
-	public int id;
+	public int id {get; private set;}
 
-	[HideInInspector]
-	public int owner;
+	public int owner {get; private set;}
 
 	private Network network;
 
-	[HideInInspector]
-	public Dictionary<Type, SynchronizedElement> synchronizedElements;
+	public Dictionary<Type, SynchronizedElement> synchronizedElements {get ; private set;}
 
 	private List<Data> data;
 
@@ -95,12 +92,20 @@ public class SynchronizedObject : MonoBehaviour {
 		}
 	}
 
+	public void SetOwner(int owner){
+		this.owner = owner;
+
+		foreach(SynchronizedElement se in synchronizedElements.Values){
+			se.SetOwner(owner);
+		}
+	}
+
 	public bool IsOwner(){
 		if(network.isServer){
 			return (owner == -1);
 		}
 		else{
-			return (network.client.clientInformations.clientId == owner);
+			return (network.client.clientId == owner);
 		}
 	}
 }

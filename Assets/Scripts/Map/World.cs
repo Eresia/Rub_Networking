@@ -29,11 +29,9 @@ public class World : MonoBehaviour {
 
 	public bool createInside;
 
-	[HideInInspector]
-	public Transform selfTransform;
+	public Transform selfTransform {get ; private set;}
 
-	[HideInInspector]
-	public WorldGeneration worldGeneration;
+	public WorldGeneration worldGeneration {get ; private set;}
 
 	private MapBlock[,,] mapTable;
 
@@ -144,7 +142,6 @@ public class World : MonoBehaviour {
 		mbTransform.SetParent(mapTransform);
 		mbTransform.localRotation = Quaternion.identity;
 		mbTransform.localPosition = worldPos;
-		newBlock.selfRenderer = newBlock.GetComponent<Renderer>();
 
 		mapTable[tablePos.x, tablePos.y, tablePos.z] = newBlock;
 		SetNeighbours(newBlock, tablePos);

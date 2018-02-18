@@ -25,7 +25,7 @@ public class CharacterServerData : SynchronizedElementServerData<SynchronizedCha
 		SynchronizedObject obj = GetSynchronizedObject();
 		SynchronizedCharacter element = GetSynchronizedElement();
 
-		if(obj.owner != clientInformations.clientId){
+		if(obj.owner != clientInformations.client.clientId){
 			element.character.selfTranform.rotation = playerRotation.ToQuaternion();
 			element.character.head.rotation = cameraRotation.ToQuaternion();
 		}

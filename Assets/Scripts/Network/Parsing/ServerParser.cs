@@ -32,8 +32,8 @@ public class ServerParser : DataParser {
 
 		} catch(BadDataException e){
 			CustomDebug.LogWarning("Bad Message ! " + e.Message, VerboseLevel.INFORMATIONS);
-		} catch(Exception err){
-			throw err;
+		} catch(Exception e){
+			throw e;
 		}
 		memoryStream.Close();
 		

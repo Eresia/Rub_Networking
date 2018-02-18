@@ -11,8 +11,7 @@ public abstract class NetworkObject {
 
 	public bool isClosed;
 
-	[HideInInspector]
-	public Network network;
+	public Network network {get ; private set;}
 
 	protected UdpClient socket;
 
@@ -78,30 +77,30 @@ public abstract class NetworkObject {
 			socket.BeginReceive(new AsyncCallback(ReceiveCallback), null);
 		}
 		catch (ObjectDisposedException){
-			Debug.Log("Connexion closed");
+			CustomDebug.LogWarning("Connexion closed", VerboseLevel.IMPORTANT);
 			Close();
 		}
 		catch (SocketException){
-			Debug.Log("Connexion closed");
+			CustomDebug.LogWarning("Connexion closed", VerboseLevel.IMPORTANT);
 			Close();
 		}
-		catch (Exception err)
+		catch (Exception e)
 		{
 			Close();
-			Debug.LogException(err);
+			Debug.LogException(e);
 		}
 	}
 
 	public void SendCallback(IAsyncResult asyncResult){
 		try{
 			if(socket.EndSend(asyncResult) == 0){
-				Debug.LogWarning("Send empty message");
+				CustomDebug.LogWarning("Send empty message", VerboseLevel.IMPORTANT);
 			}
 		}
-		catch (Exception err)
+		catch (Exception e)
 		{
 			Close();
-			Debug.LogException(err);
+			Debug.LogException(e);
 		}
 	}
 

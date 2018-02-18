@@ -10,8 +10,7 @@ public class SynchronizedTransform : SynchronizedElement {
 
     public float error;
 
-    [HideInInspector]
-    public Transform selfTransform;
+    public Transform selfTransform {get ; private set;}
 
     protected override void Awake() {
         base.Awake();
@@ -28,9 +27,6 @@ public class SynchronizedTransform : SynchronizedElement {
 
     public bool ExceedError(Vector3 pos1, Vector3 pos2){
         Vector3 posError = pos1 - pos2;
-        if(posError.sqrMagnitude > error){
-            CustomDebug.LogWarning("ExceedError : " + posError.sqrMagnitude, VerboseLevel.INFORMATIONS);
-        }
         return (posError.sqrMagnitude > error);
     }
 }

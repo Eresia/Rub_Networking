@@ -29,9 +29,9 @@ public abstract class ClientData : Data {
 		this.serverInformations = serverInformations;
 		this.actualClient = actualClient;
 
-		CustomDebug.Log("Try to validate " + GetType(), VerboseLevel.ALL);
+		CustomDebug.Log("Try to validate " + GetType() +  " From " + actualClient.Address.ToString() + ":" + actualClient.Port.ToString(), VerboseLevel.ALL);
 		if(alreadyValidate || CheckAllValidation()){
-			CustomDebug.Log("Execute " + GetType(), VerboseLevel.ALL);
+			CustomDebug.Log("Execute " + GetType() +  " From " + actualClient.Address.ToString() + ":" + actualClient.Port.ToString(), VerboseLevel.ALL);
 			if(Execute()){
 				AddMainThreadAction();
 			}

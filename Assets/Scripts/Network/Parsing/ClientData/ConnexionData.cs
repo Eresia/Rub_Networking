@@ -7,6 +7,9 @@ using System.Net.Sockets;
 
 [System.Serializable]
 public class ConnexionData : ClientData {
+
+	[System.NonSerialized]
+	private int clientId;
 	
 	protected override bool Validate(){
 		return true;
@@ -14,13 +17,20 @@ public class ConnexionData : ClientData {
 
 	protected override bool Execute(){
 		CustomDebug.Log("Execute Connexion", VerboseLevel.ALL);
-		serverInformations.server.CreateNewClient(actualClient);
-		serverInformations.server.SendData(actualClient, new AcceptConnexionData(serverInformations.world.worldGeneration));
-		return true;
+		clientId = serverInformations.server.CreateNewClient(actualClient);
+		if(clientId != -1){
+			serverInformations.server.SendData(actualClient, new AcceptConnexionData(serverInformations.world.worldGeneration, clientId));
+			CustomDebug.Log("Client " + actualClient.Address.ToString() + ":" + actualClient.Port.ToString() + " connected", VerboseLevel.IMPORTANT);
+			return true;
+		}
+		else{
+			CustomDebug.Log("Cant connect client " + actualClient.Address.ToString() + ":" + actualClient.Port.ToString(), VerboseLevel.IMPORTANT);
+			return false;
+		}
 	}
 
 	public override void ExecuteOnMainThread(){
-		SynchronizedCharacter.CreateCharacter(serverInformations.server.clients[actualClient].id, GameManager.instance.characterPrefab, serverInformations.world);
+		SynchronizedCharacter.CreateCharacter(clientId, GameManager.instance.characterPrefab, serverInformations.world);
 	}
 
 	protected override bool NeedConnexion(){

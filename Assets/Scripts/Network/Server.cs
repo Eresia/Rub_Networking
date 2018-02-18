@@ -17,8 +17,7 @@ public class Server : NetworkObject {
 		}
 	}
 
-	[HideInInspector]
-	public ConcurrentDictionary<IPEndPoint, ClientToken> clients;
+	public ConcurrentDictionary<IPEndPoint, ClientToken> clients {get ; private set;}
 
 	public ServerInformations serverInformations;
 
@@ -45,7 +44,7 @@ public class Server : NetworkObject {
 		try{
 			base.SendData(client, message);
 		} catch(ObjectDisposedException){
-			Debug.Log("Object disposed, Client removed");
+			CustomDebug.LogWarning("Object disposed, Client removed", VerboseLevel.IMPORTANT);
 			RemoveClient(client);
 		}
 	}
@@ -58,7 +57,7 @@ public class Server : NetworkObject {
 
 	public int CreateNewClient(IPEndPoint newClient){
 		int id = -1;
-		if(clients.TryAdd(newClient, new ClientToken(id))){
+		if(clients.TryAdd(newClient, new ClientToken(actualId))){
 			id = actualId;
 			actualId++;
 		}

@@ -62,16 +62,7 @@ public class MapBlock : MonoBehaviour {
 
 	public bool canSpawnOn;
 
-	[HideInInspector]
-	public Renderer selfRenderer;
-
-	void Awake()
-	{
-		selfRenderer = GetComponent<Renderer>();
-	}
-
 	public void CalculateVisibility(){
-		selfRenderer.gameObject.SetActive(neighbours.IsNotArounded());
-		// selfRenderer.enabled = true;
+		gameObject.SetActive(neighbours.IsNotArounded());
 	}
 }

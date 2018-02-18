@@ -8,17 +8,13 @@ public class Network : MonoBehaviour {
 	public int serverMaxAction;
 	public int clientMaxAction;
 
-	[HideInInspector]
-	public bool isServer;
+	public bool isServer {get ; private set;}
 
-	[HideInInspector]
-	public bool isLaunched;
+	public bool isLaunched {get ; private set;}
 
-	[HideInInspector]
-	public Server server;
+	public Server server {get ; private set;}
 
-	[HideInInspector]
-	public Client client;
+	public Client client {get ; private set;}
 
 	private readonly static object RequireLock = new object();
 

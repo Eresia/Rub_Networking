@@ -5,13 +5,11 @@ using UnityEngine;
 [RequireComponent(typeof(Character), typeof(SynchronizedTransform))]
 public class SynchronizedCharacter : SynchronizedElement {
 
-    public LayerMask ownPlayerLayer;
+    public int ownPlayerLayer;
 
-    [HideInInspector]
-    public Character character;
+    public Character character {get ; private set;}
 
-    [HideInInspector]
-    public SynchronizedTransform synchronizedTransform;
+    public SynchronizedTransform synchronizedTransform {get ; private set;}
 
     protected override void Awake() {
         base.Awake();
@@ -21,15 +19,18 @@ public class SynchronizedCharacter : SynchronizedElement {
 
     public override void Init(int owner, bool isServer){
         base.Init(owner, isServer);
-        if(!isServer && synchronizedObject.IsOwner()){
+        if(!isServer){
             if(synchronizedObject.IsOwner()){
                 GameManager.instance.serverCamera.SetActive(false);
                 character.selfCamera.gameObject.SetActive(true);
                 character.gameObject.layer = ownPlayerLayer;
                 character.head.gameObject.layer = ownPlayerLayer;
+                for(int i = 0; i < character.head.childCount; i++){
+                    character.head.GetChild(i).gameObject.layer = ownPlayerLayer;
+                }
             }
             else{
-                character.selfRigidbody.isKinematic = true;
+                character.selfRigidbody.useGravity = false;
             }
         }
     }
@@ -57,10 +58,11 @@ public class SynchronizedCharacter : SynchronizedElement {
         }
     }
 
-    public static void CreateCharacter(int id, Character characterPrefab, World world){
-		Character newCharacter = Instantiate<Character>(characterPrefab);
+    public static void CreateCharacter(int owner, SynchronizedCharacter characterPrefab, World world){
+		SynchronizedCharacter newCharacter = Instantiate<SynchronizedCharacter>(characterPrefab);
+        newCharacter.synchronizedObject.SetOwner(owner);
         Vector3 characterPosition = world.GetRandomSpawnPosition();
-        characterPosition.y += newCharacter.selfTranform.localScale.y;
-        newCharacter.selfTranform.position = characterPosition;
+        characterPosition.y += newCharacter.character.selfTranform.localScale.y;
+        newCharacter.character.selfTranform.position = characterPosition;
 	}
 }

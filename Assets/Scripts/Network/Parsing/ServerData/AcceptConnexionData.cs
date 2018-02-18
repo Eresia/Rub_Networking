@@ -12,8 +12,9 @@ public class AcceptConnexionData : ServerData {
 
 	public int clientId;
 
-	public AcceptConnexionData(World.WorldGeneration worldGeneration){
+	public AcceptConnexionData(World.WorldGeneration worldGeneration, int clientId){
 		this.worldGeneration = worldGeneration;
+		this.clientId = clientId;
 	}
 
 	protected override bool Validate(){
@@ -21,8 +22,8 @@ public class AcceptConnexionData : ServerData {
 	}
 
 	protected override bool Execute(){
-		clientInformations.client.isConnected = true;
-		clientInformations.clientId = clientId;
+		clientInformations.client.SetConnexion(clientId);
+		CustomDebug.Log("Connected to Server", VerboseLevel.IMPORTANT);
 		return true;
 	}
 

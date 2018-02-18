@@ -24,7 +24,9 @@ public class TransformData : SynchronizedElementServerData<SynchronizedTransform
 
 		Vector3 newPosition = transform.position.ToVector3();
 
-		bool needToSynch = !element.simulateOnClient || element.ExceedError(element.selfTransform.position, newPosition);
+		bool isOwner = (clientInformations.client.clientId == element.owner);
+
+		bool needToSynch = !isOwner || !element.simulateOnClient || element.ExceedError(element.selfTransform.position, newPosition);
 
 		if(needToSynch){
 			element.selfTransform.position = newPosition;

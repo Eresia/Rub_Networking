@@ -9,6 +9,5 @@ public struct ServerInformations{
 
 public struct ClientInformations{
 	public Client client;
-	public int clientId;
 	public World world;
 }

@@ -26,11 +26,9 @@ public class Character : MonoBehaviour {
 
 	public Transform selfCamera;
 
-	[HideInInspector]
-	public Transform selfTranform;
+	public Transform selfTranform {get ; private set;}
 	
-	[HideInInspector]
-	public Rigidbody selfRigidbody;
+	public Rigidbody selfRigidbody {get ; private set;}
 
 	void Awake()
 	{

@@ -419,11 +419,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1d7f39dc6955bd4c9aec78dce042f1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ownPlayerLayer:
-    serializedVersion: 2
-    m_Bits: 512
-  character: {fileID: 0}
-  synchronizedTransform: {fileID: 0}
+  ownPlayerLayer: 9
 --- !u!114 &114364595362017394
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -438,7 +434,6 @@ MonoBehaviour:
   synchronizeRotation: 0
   simulateOnClient: 1
   error: 1
-  selfTransform: {fileID: 0}
 --- !u!114 &114532558209821882
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -451,8 +446,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectPrefabId: 0
-  id: 0
-  owner: 0
 --- !u!114 &114596973796331100
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -472,8 +465,6 @@ MonoBehaviour:
   jumpForce: 6
   head: {fileID: 4926470228815178}
   selfCamera: {fileID: 4793997356287884}
-  selfTranform: {fileID: 0}
-  selfRigidbody: {fileID: 0}
 --- !u!124 &124053548339739648
 Behaviour:
   m_ObjectHideFlags: 1
