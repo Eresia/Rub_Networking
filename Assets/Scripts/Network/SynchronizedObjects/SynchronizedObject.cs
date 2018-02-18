@@ -58,6 +58,7 @@ public class SynchronizedObject : MonoBehaviour {
 
 		if(network.isServer){
 			foreach(SynchronizedElement se in synchronizedElements.Values){
+				se.ExecuteOnMainThread();
 				ServerData newData = se.SynchronizeFromServer();
 				if(newData != null){
 					data.Add(newData);
@@ -69,14 +70,17 @@ public class SynchronizedObject : MonoBehaviour {
 		}
 		else{
 			foreach(SynchronizedElement se in synchronizedElements.Values){
+				se.ExecuteOnMainThread();
 				ClientData newData = se.SynchronizeFromClient();
 				if(newData != null){
 					data.Add(newData);
 				}
+
+				se.ExecuteOnMainThread();
 			}
 
 			SynchronizedObjectClientData finalData = new SynchronizedObjectClientData(data.Cast<ClientData>().ToArray(), id);
-			network.server.SendDataToAllClients(finalData);
+			network.client.SendData(finalData);
 		}
 	}
 

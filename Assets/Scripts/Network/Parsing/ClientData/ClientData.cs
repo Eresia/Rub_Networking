@@ -21,7 +21,7 @@ public abstract class ClientData : Data {
 		this.serverInformations = serverInformations;
 		this.actualClient = actualClient;
 
-		alreadyValidate = ValidateConnexionState() && Validate();
+		alreadyValidate = CheckAllValidation();
 		return alreadyValidate;
 	}
 
@@ -30,10 +30,10 @@ public abstract class ClientData : Data {
 		this.actualClient = actualClient;
 
 		CustomDebug.Log("Try to validate " + GetType(), VerboseLevel.ALL);
-		if(alreadyValidate || (ValidateConnexionState() && Validate())){
+		if(alreadyValidate || CheckAllValidation()){
 			CustomDebug.Log("Execute " + GetType(), VerboseLevel.ALL);
 			if(Execute()){
-				serverInformations.server.AddMainThreadAction(this);
+				AddMainThreadAction();
 			}
 		}
 		else{
@@ -53,6 +53,14 @@ public abstract class ClientData : Data {
 
 	private bool IsConnected(){
 		return serverInformations.server.clients.ContainsKey(actualClient);
+	}
+
+	protected virtual void AddMainThreadAction(){
+		serverInformations.server.AddMainThreadAction(this);
+	}
+
+	protected virtual bool CheckAllValidation(){
+		return (ValidateConnexionState() && Validate());
 	}
 
 	private bool ValidateConnexionState(){

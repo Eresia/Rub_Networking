@@ -9,12 +9,15 @@ public class World : MonoBehaviour {
 	public struct WorldGeneration{
 		public int mapWidth;
 		public int mapLength;
+		public int minHeight;
 		public float mapSeed;
 		public float biomeSeed;
+		
 
-		public WorldGeneration(int mapWidth, int mapLength, float mapSeed, float biomeSeed){
+		public WorldGeneration(int mapWidth, int mapLength, int minHeight, float mapSeed, float biomeSeed){
 			this.mapWidth = mapWidth;
 			this.mapLength = mapLength;
+			this.minHeight = minHeight;
 			this.mapSeed = mapSeed;
 			this.biomeSeed = biomeSeed;
 		}
@@ -42,14 +45,14 @@ public class World : MonoBehaviour {
 		selfTransform = GetComponent<Transform>();
 	}
 
-	public void GenerateMap(int width, int length, float floatScale, float biomeSeed){
-		GenerateMap(new WorldGeneration(width, length, floatScale, biomeSeed));
+	public void GenerateMap(int width, int length, int minHeight, float floatScale, float biomeSeed){
+		GenerateMap(new WorldGeneration(width, length, minHeight, floatScale, biomeSeed));
 	}
 
 	public void GenerateMap(WorldGeneration worldGeneration){
 		this.worldGeneration = worldGeneration;
 		blockSize = blockPrefabs[0].GetComponent<Transform>().localScale.x/* + 0.05f*/;
-		int maxHeight = Mathf.RoundToInt(worldGeneration.mapSeed) + 1;
+		int maxHeight = Mathf.RoundToInt(worldGeneration.mapSeed) + 2;
 		mapTable = new MapBlock[worldGeneration.mapWidth, worldGeneration.mapLength, maxHeight];
 		// for(int i = 0; i < mapTable.Length; i++){
 		// 	mapTable[i] = new MapBlock[length][];
@@ -66,7 +69,7 @@ public class World : MonoBehaviour {
 				
 				MapBlock prefab = blockPrefabs[biomeNoise];
 
-				int blockHeight = GetBlockHeight(worldGeneration.mapSeed, biomeNoise, i, j, blockPrefabs);
+				int blockHeight = GetBlockHeight(worldGeneration.mapSeed, biomeNoise, i, j, worldGeneration.minHeight, blockPrefabs);
 
 				if(createInside){
 					for(int k = blockHeight; k >= 1; k--){
@@ -117,7 +120,7 @@ public class World : MonoBehaviour {
 			biomeNoise = (int) (MakePerlinNoise(posX * worldGeneration.biomeSeed, posZ * worldGeneration.biomeSeed, possibleBlocks.Length + worldGeneration.biomeSeed));
 		} while(!possibleBlocks[biomeNoise].canSpawnOn);
 
-		int blockHeight = GetBlockHeight(worldGeneration.mapSeed, biomeNoise, posX, posZ, possibleBlocks);
+		int blockHeight = GetBlockHeight(worldGeneration.mapSeed, biomeNoise, posX, posZ, worldGeneration.minHeight, possibleBlocks);
 
 		return new Vector3Int(posX, blockHeight, posZ);
 	}
@@ -126,13 +129,12 @@ public class World : MonoBehaviour {
 		return Mathf.PerlinNoise (((float) i) / flatscale, ((float) j) / flatscale) * flatscale;
 	}
 
-	private static int GetBlockHeight(float mapSeed, int biomeNoise, int i, int j, MapBlock[] possibleBlocks){
+	private static int GetBlockHeight(float mapSeed, int biomeNoise, int i, int j, int minHeight, MapBlock[] possibleBlocks){
 		if(possibleBlocks[biomeNoise].fixedHeight != -1){
 			return possibleBlocks[biomeNoise].fixedHeight;
 		}
 		else{
-			int flatNoise =  Mathf.RoundToInt (MakePerlinNoise(i, j, mapSeed));
-			return Mathf.Max(flatNoise, 2);
+			return (Mathf.RoundToInt(MakePerlinNoise(i, j, mapSeed)) + minHeight);
 		}
 	}
 

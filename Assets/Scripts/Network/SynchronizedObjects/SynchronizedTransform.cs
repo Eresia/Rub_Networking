@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class SynchronizedTransform : SynchronizedElement {
 
+    public bool synchronizeRotation;
+
+    public bool simulateOnClient;
+
+    public float error;
+
     [HideInInspector]
     public Transform selfTransform;
 
@@ -13,10 +19,18 @@ public class SynchronizedTransform : SynchronizedElement {
     }
 
 	public override ServerData SynchronizeFromServer(){
-        return new TransformData(synchronizedObject.id, new SerializableTransform(selfTransform));
+        return new TransformData(synchronizedObject.id, selfTransform);
     }
 
 	public override ClientData SynchronizeFromClient(){
         return null;
+    }
+
+    public bool ExceedError(Vector3 pos1, Vector3 pos2){
+        Vector3 posError = pos1 - pos2;
+        if(posError.sqrMagnitude > error){
+            CustomDebug.LogWarning("ExceedError : " + posError.sqrMagnitude, VerboseLevel.INFORMATIONS);
+        }
+        return (posError.sqrMagnitude > error);
     }
 }

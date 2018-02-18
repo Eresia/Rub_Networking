@@ -21,20 +21,20 @@ public abstract class ServerData : Data{
 		this.clientInformations = clientInformations;
 		this.sender = sender;
 
-		alreadyValidate = ValidateConnexionState() && Validate();
+		alreadyValidate = CheckAllValidation();
 		return alreadyValidate;
 	}
 
-	public void ValidateAndExecute(ClientInformations clientInformations, IPEndPoint sender){
+	public virtual void ValidateAndExecute(ClientInformations clientInformations, IPEndPoint sender){
 
 		this.clientInformations = clientInformations;
 		this.sender = sender;
 		
 		CustomDebug.Log("Try to validate " + GetType(), VerboseLevel.ALL);
-		if(alreadyValidate || (ValidateConnexionState() && Validate())){
+		if(alreadyValidate || CheckAllValidation()){
 			CustomDebug.Log("Execute " + GetType(), VerboseLevel.ALL);
 			if(Execute()){
-				clientInformations.client.AddMainThreadAction(this);
+				AddMainThreadAction();
 			}
 		}
 		else{
@@ -50,6 +50,14 @@ public abstract class ServerData : Data{
 
 	protected virtual bool NeedConnexion(){
 		return true;
+	}
+
+	protected virtual void AddMainThreadAction(){
+		clientInformations.client.AddMainThreadAction(this);
+	}
+
+	protected virtual bool CheckAllValidation(){
+		return (ValidateConnexionState() && Validate());
 	}
 
 	private bool IsConnected(){

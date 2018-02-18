@@ -40,6 +40,7 @@ public class GameManager : MonoBehaviour {
 
 	public int mapWidth = 60;
 	public int mapLength = 60;
+	public int minHeight = 2;
 	public float heightMin = 7f;
 	public float heightMax = 9f;
 
@@ -60,7 +61,7 @@ public class GameManager : MonoBehaviour {
 	public void LaunchServer(){
 		try{
 			int port = int.Parse(serverPort.text);
-			map.GenerateMap(mapWidth, mapLength, GenerateRandomSeed(heightMin, heightMax), GenerateRandomSeed(0.08f, 0.12f));
+			map.GenerateMap(mapWidth, mapLength, minHeight, GenerateRandomSeed(heightMin, heightMax), GenerateRandomSeed(0.08f, 0.12f));
 			serverCamera.gameObject.SetActive(true);
 			network.LaunchServer(port, map);
 			CommonLaunch();

@@ -28,10 +28,10 @@ public class Client : NetworkObject {
 
 	public override void Launch(){
 		base.Launch();
-		SendDataToServer(new ConnexionData());
+		SendData(new ConnexionData());
 	}
 
-	public void SendDataToServer(ClientData message){
+	public void SendData(ClientData message){
 		SendData(serverEndPoint, message);
 	}
 

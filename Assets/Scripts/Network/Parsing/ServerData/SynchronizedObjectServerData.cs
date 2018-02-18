@@ -21,6 +21,14 @@ public class SynchronizedObjectServerData : ServerData {
 	}
 
 	protected override bool Validate(){
+		if(id < 0){
+			return false;
+		}
+
+		if(data == null){
+			return false;
+		}
+
 		if(GameManager.instance.prefabGestion.synchronizedObjectPrefabs.Length <= prefabId){
 			return false;
 		}
@@ -29,10 +37,15 @@ public class SynchronizedObjectServerData : ServerData {
 			return false;
 		}
 
-		foreach(ServerData sd in data){
-			if((sd == null) || !sd.OnlyValidate(clientInformations, sender)){
-				return false;
+		if(clientInformations.client.network.HasSynchronizedObject(id)){
+			foreach(ServerData sd in data){
+				if((sd == null) || !sd.OnlyValidate(clientInformations, sender)){
+					return false;
+				}
 			}
+		}
+		else if(clientInformations.client.network.HasRequiredObject(id)){
+			return false;
 		}
 		
 		return true;
@@ -40,21 +53,20 @@ public class SynchronizedObjectServerData : ServerData {
 
 	protected override bool Execute(){
 		if(!clientInformations.client.network.HasSynchronizedObject(id)){
+			clientInformations.client.network.RequireObject(id);
 			return true;
 		}
 
 		foreach(ServerData sd in data){
 			sd.ValidateAndExecute(clientInformations, sender);
 		}
+
 		return false;
 	}
 
 	public override void ExecuteOnMainThread(){
 		SynchronizedObject newObject = GameObject.Instantiate<SynchronizedObject>(GameManager.instance.prefabGestion.synchronizedObjectPrefabs[prefabId]);
 		newObject.Init(id, owner);
-
-		foreach(ServerData sd in data){
-			sd.ValidateAndExecute(clientInformations, sender);
-		}
+		clientInformations.client.network.EndRequireObject(id);
 	}
 }

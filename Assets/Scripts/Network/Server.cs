@@ -41,14 +41,13 @@ public class Server : NetworkObject {
 		return new ServerParser(serverInformations);
 	}
 
-	public override void SendData(IPEndPoint client, Data message){
+	public new void SendData(IPEndPoint client, Data message){
 		try{
 			base.SendData(client, message);
 		} catch(ObjectDisposedException){
 			Debug.Log("Object disposed, Client removed");
 			RemoveClient(client);
 		}
-		
 	}
 
 	public void SendDataToAllClients(Data message){

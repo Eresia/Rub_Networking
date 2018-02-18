@@ -14,8 +14,17 @@ public class SynchronizedObjectClientData : ClientData {
 		this.id = id;
 	}
 
-	protected override bool Validate(){		
-		if(!serverInformations.server.network.HasSynchronizedObject(id)){
+	protected override bool Validate(){
+		if(data == null){
+			return false;
+		}
+
+		SynchronizedObject obj = serverInformations.server.network.GetSynchronizedObject(id);
+		if(obj == null){
+			return false;
+		}
+
+		if(obj.owner != serverInformations.server.clients[actualClient].id){
 			return false;
 		}
 

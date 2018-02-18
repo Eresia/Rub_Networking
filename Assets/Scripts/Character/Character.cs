@@ -22,12 +22,15 @@ public class Character : MonoBehaviour {
 	[SerializeField]
 	private float jumpForce;
 
+	public Transform head;
+
 	public Transform selfCamera;
 
 	[HideInInspector]
 	public Transform selfTranform;
 	
-	private Rigidbody selfRigidbody;
+	[HideInInspector]
+	public Rigidbody selfRigidbody;
 
 	void Awake()
 	{
@@ -65,11 +68,11 @@ public class Character : MonoBehaviour {
 
 	public void Rotate(float vertical, float horizontal){
 		selfTranform.Rotate(0, cameraVerticalSpeed * vertical, 0);
-		float yaw = selfCamera.localRotation.eulerAngles.x - cameraHorizontalSpeed * horizontal;
+		float yaw = head.localRotation.eulerAngles.x - cameraHorizontalSpeed * horizontal;
 		if(yaw > 180){
 			yaw -= 360f;
 		}
 		yaw = Mathf.Clamp(yaw, minAngleRotation, maxAngleRotation);
-		selfCamera.localRotation = Quaternion.Euler(new Vector3(yaw, 0, 0));
+		head.localRotation = Quaternion.Euler(new Vector3(yaw, 0, 0));
 	}
 }

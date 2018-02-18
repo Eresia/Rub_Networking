@@ -11,7 +11,7 @@ public class GenerateMapEditor {
 	[MenuItem("Custom/Generate Normal Map")]
 	public static void GenerateNormalMap(){
 		World map = GameObject.FindObjectOfType(typeof(World)) as World;
-		map.GenerateMap(60, 60, GameManager.GenerateRandomSeed(7f, 9f), GameManager.GenerateRandomSeed(0.08f, 0.12f));
+		map.GenerateMap(60, 60, 2, GameManager.GenerateRandomSeed(7f, 9f), GameManager.GenerateRandomSeed(0.08f, 0.12f));
 	}
 
 	[MenuItem("Custom/Remove Map")]

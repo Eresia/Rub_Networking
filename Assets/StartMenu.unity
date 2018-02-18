@@ -605,6 +605,7 @@ MonoBehaviour:
   clientPort: {fileID: 1689835292}
   mapWidth: 60
   mapLength: 60
+  minHeight: 2
   heightMin: 5
   heightMax: 9
 --- !u!114 &469695058
@@ -618,7 +619,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bca13a4c424a7614e8a2754d287923b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  verboseLevel: 3
+  verboseLevel: 2
 --- !u!114 &469695060
 MonoBehaviour:
   m_ObjectHideFlags: 0

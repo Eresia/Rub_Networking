@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using UnityEngine;
 
 public class Network : MonoBehaviour {
@@ -19,14 +20,18 @@ public class Network : MonoBehaviour {
 	[HideInInspector]
 	public Client client;
 
+	private readonly static object RequireLock = new object();
+
 	private int objectsId;
 
-	private Dictionary<int, SynchronizedObject> synchronizedObjects;
+	private ConcurrentDictionary<int, SynchronizedObject> synchronizedObjects;
+	private List<int> requiredObject;
 
 	private void Awake() {
 		isLaunched = false;
 		objectsId = 0;
-		synchronizedObjects = new Dictionary<int, SynchronizedObject>();
+		synchronizedObjects = new ConcurrentDictionary<int, SynchronizedObject>();
+		requiredObject = new List<int>();
 	}
 
 	public void LaunchServer(int port, World world){
@@ -54,7 +59,7 @@ public class Network : MonoBehaviour {
 			return false;
 		}
 
-		synchronizedObjects.Add(i, obj);
+		synchronizedObjects.TryAdd(i, obj);
 		return true;
 	}
 
@@ -72,7 +77,30 @@ public class Network : MonoBehaviour {
 
 	public void RemoveSynchronizedObject(int i){
 		if(HasSynchronizedObject(i)){
-			synchronizedObjects.Remove(i);
+			SynchronizedObject obj;
+			synchronizedObjects.TryRemove(i, out obj);
+		}
+	}
+
+	public void RequireObject(int i){
+		lock(RequireLock){
+			if(!requiredObject.Contains(i)){
+				requiredObject.Add(i);
+			}
+		}
+	}
+
+	public bool HasRequiredObject(int i){
+		lock(RequireLock){
+			return requiredObject.Contains(i);
+		}
+	}
+
+	public void EndRequireObject(int i){
+		lock(RequireLock){
+			if(requiredObject.Contains(i)){
+				requiredObject.Remove(i);
+			}
 		}
 	}
 

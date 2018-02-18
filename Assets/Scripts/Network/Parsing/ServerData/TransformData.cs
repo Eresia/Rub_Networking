@@ -3,24 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class TransformData : ServerData {
-
-	private int id;
+public class TransformData : SynchronizedElementServerData<SynchronizedTransform> {
 
 	private SerializableTransform transform;
 
-	public TransformData(int id, SerializableTransform transform){
-		this.id = id;
-		this.transform = transform;
+	public TransformData(int id, Transform transform) : base(id){
+		this.transform = new SerializableTransform(transform);
 	}
 
 	protected override bool Validate(){
-		SynchronizedObject obj = clientInformations.client.network.GetSynchronizedObject(id);
-		if(obj == null){
-			return false;
-		}
-
-		return obj.synchronizedElements.ContainsKey(typeof(SynchronizedTransform));
+		return true;
 	}
 
 	protected override bool Execute(){
@@ -28,9 +20,18 @@ public class TransformData : ServerData {
 	}
 
 	public override void ExecuteOnMainThread(){
-		SynchronizedObject obj = clientInformations.client.network.GetSynchronizedObject(id);
-		SynchronizedTransform element = (SynchronizedTransform) obj.synchronizedElements[typeof(SynchronizedTransform)];
-		element.selfTransform.position = transform.position.ToVector3();
-		element.selfTransform.rotation = transform.rotation.ToQuaternion();
+		SynchronizedTransform element = GetSynchronizedElement();
+
+		Vector3 newPosition = transform.position.ToVector3();
+
+		bool needToSynch = !element.simulateOnClient || element.ExceedError(element.selfTransform.position, newPosition);
+
+		if(needToSynch){
+			element.selfTransform.position = newPosition;
+			if(element.synchronizeRotation){
+				element.selfTransform.rotation = transform.rotation.ToQuaternion();
+			}
+		}
+		
 	}
 }
