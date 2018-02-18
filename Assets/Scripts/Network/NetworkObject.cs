@@ -58,7 +58,7 @@ public abstract class NetworkObject {
 		actionQueue.Enqueue(action);
 	}
 
-	public void SendData(IPEndPoint client, Data message){
+	public virtual void SendData(IPEndPoint client, Data message){
 		if(message != null){
 			byte[] buffer = parser.ToBytes(message);
 			CustomDebug.Log("Send : " + message.GetType(), VerboseLevel.ALL);

@@ -15,7 +15,7 @@ public class Client : NetworkObject {
 
 	public IPEndPoint serverEndPoint;
 
-	private ClientInformations clientInformations;
+	public ClientInformations clientInformations;
 
 	public Client(Network network, string address, int port, World world, int maxActionPerFrame) : base(){
 		IPAddress serverAddress = IPAddress.Parse(address);
@@ -38,6 +38,7 @@ public class Client : NetworkObject {
 	private void SetClientInformations(World world){
 		clientInformations.client = this;
 		clientInformations.world = world;
+		clientInformations.clientId = -1;
 	}
 
 	protected override DataParser GetParser(){

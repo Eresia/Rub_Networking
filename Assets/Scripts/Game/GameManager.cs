@@ -7,9 +7,11 @@ using System;
 public class GameManager : MonoBehaviour {
 
 	public World map;
-	public CharacterGestion playerGestion;
+
+	[Space]
 
 	public PrefabGestion prefabGestion;
+	public Character characterPrefab;
 
 	[Space]
 

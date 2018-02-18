@@ -5,6 +5,7 @@ using UnityEngine;
 public enum VerboseLevel {
 	NONE,
 	IMPORTANT,
+	INFORMATIONS,
 	ALL
 }
 

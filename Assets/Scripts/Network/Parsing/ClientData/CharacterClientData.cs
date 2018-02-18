@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class CharacterClientData : ClientData {
 
 	protected override bool Validate(){

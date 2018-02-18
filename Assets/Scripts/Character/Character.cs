@@ -4,22 +4,30 @@ using UnityEngine;
 
 public class Character : MonoBehaviour {
 
-	public float moveSpeed;
-	public float cameraHorizontalSpeed;
-	public float cameraVerticalSpeed;
+	[SerializeField]
+	private float moveSpeed;
 
-	public float minAngleRotation;
-	public float maxAngleRotation;
+	[SerializeField]
+	private float cameraHorizontalSpeed;
 
-	[HideInInspector]
-	public Transform selfTranform;
-	private Rigidbody selfRigidbody;
+	[SerializeField]
+	private float cameraVerticalSpeed;
+
+	[SerializeField]
+	private float minAngleRotation;
+
+	[SerializeField]
+	private float maxAngleRotation;
 
 	[SerializeField]
 	private float jumpForce;
 
-	[SerializeField]
-	private Transform selfCamera;
+	public Transform selfCamera;
+
+	[HideInInspector]
+	public Transform selfTranform;
+	
+	private Rigidbody selfRigidbody;
 
 	void Awake()
 	{

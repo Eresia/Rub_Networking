@@ -18,14 +18,14 @@ public class Server : NetworkObject {
 	}
 
 	[HideInInspector]
-	public Dictionary<IPEndPoint, ClientToken> clients;
+	public ConcurrentDictionary<IPEndPoint, ClientToken> clients;
 
-	private ServerInformations serverInformations;
+	public ServerInformations serverInformations;
 
 	private int actualId;
 
 	public Server(Network network, int port, World world, int maxActionPerFrame) : base(){
-		clients = new Dictionary<IPEndPoint, ClientToken>();
+		clients = new ConcurrentDictionary<IPEndPoint, ClientToken>();
 		actualId = 0;
 		SetServerInformations(world);
 		
@@ -41,6 +41,16 @@ public class Server : NetworkObject {
 		return new ServerParser(serverInformations);
 	}
 
+	public override void SendData(IPEndPoint client, Data message){
+		try{
+			base.SendData(client, message);
+		} catch(ObjectDisposedException){
+			Debug.Log("Object disposed, Client removed");
+			RemoveClient(client);
+		}
+		
+	}
+
 	public void SendDataToAllClients(Data message){
 		foreach(IPEndPoint c in clients.Keys){
 			SendData(c, message);
@@ -49,12 +59,16 @@ public class Server : NetworkObject {
 
 	public int CreateNewClient(IPEndPoint newClient){
 		int id = -1;
-		if(!clients.ContainsKey(newClient)){
+		if(clients.TryAdd(newClient, new ClientToken(id))){
 			id = actualId;
-			clients.Add(newClient, new ClientToken(id));
 			actualId++;
 		}
 		return id;
+	}
+
+	public void RemoveClient(IPEndPoint newClient){
+		ClientToken token;
+		clients.TryRemove(newClient, out token);
 	}
 	
 }

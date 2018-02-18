@@ -7,16 +7,25 @@ public class SynchronizedObjectServerData : ServerData {
 
 	public int id;
 
+	public int owner;
+
 	public int prefabId;
 
 	public ServerData[] data;
 
-	public SynchronizedObjectServerData(ServerData[] data){
+	public SynchronizedObjectServerData(ServerData[] data, int id, int prefabId, int owner){
+		this.id = id;
 		this.data = data;
+		this.prefabId = prefabId;
+		this.owner = owner;
 	}
 
 	protected override bool Validate(){
 		if(GameManager.instance.prefabGestion.synchronizedObjectPrefabs.Length <= prefabId){
+			return false;
+		}
+
+		if(owner < -1){
 			return false;
 		}
 
@@ -42,7 +51,7 @@ public class SynchronizedObjectServerData : ServerData {
 
 	public override void ExecuteOnMainThread(){
 		SynchronizedObject newObject = GameObject.Instantiate<SynchronizedObject>(GameManager.instance.prefabGestion.synchronizedObjectPrefabs[prefabId]);
-		newObject.Init(id);
+		newObject.Init(id, owner);
 
 		foreach(ServerData sd in data){
 			sd.ValidateAndExecute(clientInformations, sender);

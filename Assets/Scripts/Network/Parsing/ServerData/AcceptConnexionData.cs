@@ -10,22 +10,27 @@ public class AcceptConnexionData : ServerData {
 
 	public World.WorldGeneration worldGeneration;
 
+	public int clientId;
+
 	public AcceptConnexionData(World.WorldGeneration worldGeneration){
 		this.worldGeneration = worldGeneration;
 	}
 
 	protected override bool Validate(){
-		CustomDebug.Log("Try to validate Accept Connexion", VerboseLevel.ALL);
-		return !IsConnected();
+		return (clientId >= 0);
 	}
 
 	protected override bool Execute(){
-		CustomDebug.Log("Execute Accept Connexion", VerboseLevel.ALL);
 		clientInformations.client.isConnected = true;
+		clientInformations.clientId = clientId;
 		return true;
 	}
 
 	public override void ExecuteOnMainThread(){
 		clientInformations.world.GenerateMap(worldGeneration);
+	}
+
+	protected override bool NeedConnexion(){
+		return false;
 	}
 }

@@ -30,7 +30,7 @@ public class ClientParser : DataParser {
 				throw new BadDataException("Not a valid Data " + obj.GetType());
 			}
 		} catch(BadDataException e){
-			Debug.LogWarning("Bad Message ! " + e.Message);
+			CustomDebug.LogWarning("Bad Message ! " + e.Message, VerboseLevel.INFORMATIONS);
 		} catch(Exception err){
 			throw err;
 		}

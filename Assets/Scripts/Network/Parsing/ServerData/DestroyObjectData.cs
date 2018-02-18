@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class DestroyObjectData : ServerData {
 
 	public int id;
@@ -11,7 +12,7 @@ public class DestroyObjectData : ServerData {
 	}
 
 	protected override bool Validate(){
-		return IsConnected() && clientInformations.client.network.HasSynchronizedObject(id);
+		return clientInformations.client.network.HasSynchronizedObject(id);
 	}
 
 	protected override bool Execute(){

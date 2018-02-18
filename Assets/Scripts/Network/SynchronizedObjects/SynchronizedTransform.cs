@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SynchronizedPosition : SynchronizedElement {
+public class SynchronizedTransform : SynchronizedElement {
 
-    private Transform selfTransform;
+    [HideInInspector]
+    public Transform selfTransform;
 
     protected override void Awake() {
         base.Awake();
@@ -12,7 +13,7 @@ public class SynchronizedPosition : SynchronizedElement {
     }
 
 	public override ServerData SynchronizeFromServer(){
-        // return new PositionData(synchronizedObject.id);
+        return new TransformData(synchronizedObject.id, new SerializableTransform(selfTransform));
     }
 
 	public override ClientData SynchronizeFromClient(){

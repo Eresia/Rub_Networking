@@ -17,18 +17,11 @@ public abstract class ClientData : Data {
 	[System.NonSerialized]
 	private bool alreadyValidate;
 
-	protected bool IsConnected(){
-		Debug.Log(serverInformations);
-		Debug.Log(serverInformations.server);
-		Debug.Log(serverInformations.server.clients);
-		return serverInformations.server.clients.ContainsKey(actualClient);
-	}
-
 	public bool OnlyValidate(ServerInformations serverInformations, IPEndPoint actualClient){
 		this.serverInformations = serverInformations;
 		this.actualClient = actualClient;
 
-		alreadyValidate = Validate();
+		alreadyValidate = ValidateConnexionState() && Validate();
 		return alreadyValidate;
 	}
 
@@ -36,7 +29,9 @@ public abstract class ClientData : Data {
 		this.serverInformations = serverInformations;
 		this.actualClient = actualClient;
 
-		if(alreadyValidate || Validate()){
+		CustomDebug.Log("Try to validate " + GetType(), VerboseLevel.ALL);
+		if(alreadyValidate || (ValidateConnexionState() && Validate())){
+			CustomDebug.Log("Execute " + GetType(), VerboseLevel.ALL);
 			if(Execute()){
 				serverInformations.server.AddMainThreadAction(this);
 			}
@@ -51,4 +46,16 @@ public abstract class ClientData : Data {
 	protected abstract bool Execute();
 
 	public abstract void ExecuteOnMainThread();
+
+	protected virtual bool NeedConnexion(){
+		return true;
+	}
+
+	private bool IsConnected(){
+		return serverInformations.server.clients.ContainsKey(actualClient);
+	}
+
+	private bool ValidateConnexionState(){
+		return !(NeedConnexion() ^ IsConnected());
+	}
 }

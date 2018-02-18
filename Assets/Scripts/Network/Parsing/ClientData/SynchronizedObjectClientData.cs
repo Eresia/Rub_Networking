@@ -9,11 +9,12 @@ public class SynchronizedObjectClientData : ClientData {
 
 	public ClientData[] data;
 
-	public SynchronizedObjectClientData(ClientData[] data){
+	public SynchronizedObjectClientData(ClientData[] data, int id){
 		this.data = data;
+		this.id = id;
 	}
 
-	protected override bool Validate(){
+	protected override bool Validate(){		
 		if(!serverInformations.server.network.HasSynchronizedObject(id)){
 			return false;
 		}

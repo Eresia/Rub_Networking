@@ -9,8 +9,7 @@ using System.Net.Sockets;
 public class ConnexionData : ClientData {
 	
 	protected override bool Validate(){
-		CustomDebug.Log("Try to validate Connexion", VerboseLevel.ALL);
-		return !IsConnected();
+		return true;
 	}
 
 	protected override bool Execute(){
@@ -21,6 +20,10 @@ public class ConnexionData : ClientData {
 	}
 
 	public override void ExecuteOnMainThread(){
-		GameManager.instance.playerGestion.CreateCharacter(serverInformations.server.clients[actualClient].id, serverInformations.world);
+		SynchronizedCharacter.CreateCharacter(serverInformations.server.clients[actualClient].id, GameManager.instance.characterPrefab, serverInformations.world);
+	}
+
+	protected override bool NeedConnexion(){
+		return false;
 	}
 }

@@ -35,11 +35,9 @@ public struct SerializableVector3{
 public struct SerializableTransform{
 	public SerializableVector3 position;
 	public SerializableVector3 rotation;
-	public SerializableVector3 scale;
 
 	public SerializableTransform(Transform transform){
 		position = new SerializableVector3(transform.position);
 		rotation = new SerializableVector3(transform.rotation);
-		scale = new SerializableVector3(transform.localScale);
 	}
 }
