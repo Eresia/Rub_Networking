@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 23865969675985990}
   - component: {fileID: 114823707143712398}
   - component: {fileID: 114959976630209164}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Lava
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -117,7 +117,6 @@ MonoBehaviour:
     right: {fileID: 0}
   fixedHeight: 2
   canSpawnOn: 0
-  selfRenderer: {fileID: 23865969675985990}
 --- !u!114 &114959976630209164
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -129,3 +128,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c4bcf2af5a562849b4bb42649fc455e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerLayer: 8

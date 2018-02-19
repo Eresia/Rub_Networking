@@ -22,6 +22,16 @@ public class Character : MonoBehaviour {
 	[SerializeField]
 	private float jumpForce;
 
+	[SerializeField]
+	private float jumpRaycastLength;
+
+	[Space]
+
+	[SerializeField]
+	private LayerMask cantJumpLayers;
+
+	[Space]
+
 	public Transform head;
 
 	public Transform selfCamera;
@@ -51,10 +61,10 @@ public class Character : MonoBehaviour {
 	}
 
 	public void Jump(){
-		bool onGround = Physics.Raycast(GetJumpPoint(1, 1), Vector3.down, 1.5f);
-		onGround |= Physics.Raycast(GetJumpPoint(-1, 1), Vector3.down, 1.5f);
-		onGround |= Physics.Raycast(GetJumpPoint(1, -1), Vector3.down, 1.5f);
-		onGround |= Physics.Raycast(GetJumpPoint(-1, -1), Vector3.down, 1.5f);
+		bool onGround = Physics.Raycast(GetJumpPoint(1, 1), Vector3.down, jumpRaycastLength, ~cantJumpLayers);
+		onGround |= Physics.Raycast(GetJumpPoint(-1, 1), Vector3.down, jumpRaycastLength, ~cantJumpLayers);
+		onGround |= Physics.Raycast(GetJumpPoint(1, -1), Vector3.down, jumpRaycastLength, ~cantJumpLayers);
+		onGround |= Physics.Raycast(GetJumpPoint(-1, -1), Vector3.down, jumpRaycastLength, ~cantJumpLayers);
 		if(onGround){
 			selfRigidbody.velocity = Vector3.up * jumpForce;
 		}

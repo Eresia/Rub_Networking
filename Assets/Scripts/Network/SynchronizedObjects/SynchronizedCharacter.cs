@@ -5,7 +5,11 @@ using UnityEngine;
 [RequireComponent(typeof(Character), typeof(SynchronizedTransform))]
 public class SynchronizedCharacter : SynchronizedElement {
 
-    public int ownPlayerLayer;
+	[SerializeField]
+    private int playerLayer;
+
+	[SerializeField]
+    private int ownPlayerLayer;
 
     public Character character {get ; private set;}
 
@@ -33,6 +37,9 @@ public class SynchronizedCharacter : SynchronizedElement {
                 character.selfRigidbody.useGravity = false;
             }
         }
+		else{
+			gameObject.layer = playerLayer;
+		}
     }
 
 	public override ServerData SynchronizeFromServer(){
