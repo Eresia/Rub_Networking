@@ -14,16 +14,19 @@ public class Client : NetworkObject {
 
 	public int clientId {get ; private set;}
 
-	public ClientInformations clientInformations;
+	public ClientInformations clientInformations {get ; set;}
 
-	public Client(Network network, string address, int port, World world, int maxActionPerFrame) : base(){
+	private float actualTime;
+
+	public Client(Network network, string address, int port, World world, int maxActionPerFrame, float timeout) : base(){
 		IPAddress serverAddress = IPAddress.Parse(address);
 		isConnected = false;
 		clientId = -1;
 		SetClientInformations(world);
 		serverEndPoint = new IPEndPoint(serverAddress, port);
+		actualTime = 0;
 
-		Init(new UdpClient(), network, maxActionPerFrame);
+		Init(new UdpClient(new IPEndPoint(serverAddress, 0)), network, maxActionPerFrame, timeout);
 	}
 
 	public override void Launch(){
@@ -31,19 +34,31 @@ public class Client : NetworkObject {
 		SendData(new ConnexionData());
 	}
 
+	private void SetClientInformations(World world){
+		ClientInformations info = new ClientInformations();
+		info.client = this;
+		info.world = world;
+		clientInformations = info;
+	}
+
+	public void CheckTimeout(float deltaTime){
+		actualTime += deltaTime;
+		if(actualTime > timeout){
+			Close();
+		}
+	}
+
+	public void ResetTime(){
+		actualTime = 0;
+	}
+
 	public void SendData(ClientData message){
 		try{
 			base.SendData(serverEndPoint, message);
 		} catch(ObjectDisposedException){
 			CustomDebug.LogWarning("Object disposed, Close Client", VerboseLevel.IMPORTANT);
-			socket.Close();
-			Application.Quit();
+			Close();
 		}
-	}
-
-	private void SetClientInformations(World world){
-		clientInformations.client = this;
-		clientInformations.world = world;
 	}
 
 	protected override DataParser GetParser(){
@@ -53,5 +68,10 @@ public class Client : NetworkObject {
 	public void SetConnexion(int id){
 		isConnected = true;
 		clientId = id;
+	}
+
+	public override void Close(){
+		base.Close();
+		CustomDebug.LogWarning("Connexion Closed", VerboseLevel.IMPORTANT);
 	}
 }

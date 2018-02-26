@@ -9,13 +9,15 @@ using System.Net.Sockets;
 
 public abstract class NetworkObject {
 
-	public bool isClosed;
+	public bool isClosed {get ; private set;}
 
 	public Network network {get ; private set;}
 
-	protected UdpClient socket;
+	protected UdpClient socket {get ; private set;}
 
-	protected ConcurrentQueue<Data> actionQueue;
+	protected ConcurrentQueue<Data> actionQueue {get ; private set;}
+
+	protected float timeout {get ; private set;}
 
 	private DataParser parser;
 
@@ -26,11 +28,12 @@ public abstract class NetworkObject {
 		actionQueue = new ConcurrentQueue<Data>();
 	}
 
-	protected void Init(UdpClient socket, Network network, int maxActionPerFrame){
+	protected void Init(UdpClient socket, Network network, int maxActionPerFrame, float timeout){
 		this.socket = socket;
 		this.network = network;
 		this.maxActionPerFrame = maxActionPerFrame;
 		parser = GetParser();
+		this.timeout = timeout;
 	}
 
 	public virtual void Launch()
@@ -51,6 +54,7 @@ public abstract class NetworkObject {
 			}
 			yield return null;
 		}
+		Application.Quit();
 	}
 
 	public void AddMainThreadAction(Data action){
@@ -68,8 +72,8 @@ public abstract class NetworkObject {
 	protected abstract DataParser GetParser();
 
 	public void ReceiveCallback(IAsyncResult asyncResult){
+		IPEndPoint sender = new IPEndPoint(0, 0);
 		try{
-			IPEndPoint sender = new IPEndPoint(0, 0);
 			byte[] buffer = socket.EndReceive(asyncResult, ref sender);
 
 			parser.Parse(sender, buffer);
@@ -77,12 +81,10 @@ public abstract class NetworkObject {
 			socket.BeginReceive(new AsyncCallback(ReceiveCallback), null);
 		}
 		catch (ObjectDisposedException){
-			CustomDebug.LogWarning("Connexion closed", VerboseLevel.IMPORTANT);
-			Close();
+			BadReceive();
 		}
 		catch (SocketException){
-			CustomDebug.LogWarning("Connexion closed", VerboseLevel.IMPORTANT);
-			Close();
+			BadReceive();
 		}
 		catch (Exception e)
 		{
@@ -104,14 +106,18 @@ public abstract class NetworkObject {
 		}
 	}
 
-	public void Close(){
+	public virtual void BadReceive(){
+		Close();
+	}
+
+	public virtual void Close(){
 		socket.Close();
 		isClosed = true;
 	}
 
 	void OnApplicationQuit()
 	{
-		if(socket != null){
+		if((socket != null) && !isClosed){
 			Close();
 		}
 	}

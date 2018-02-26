@@ -35,6 +35,7 @@ public abstract class ClientData : Data {
 			if(Execute()){
 				AddMainThreadAction();
 			}
+			serverInformations.server.ResetTimeout(actualClient);
 		}
 		else{
 			throw new BadDataException("Data is corrupted");
