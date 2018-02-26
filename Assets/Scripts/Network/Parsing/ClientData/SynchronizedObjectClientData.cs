@@ -19,7 +19,7 @@ public class SynchronizedObjectClientData : ClientData {
 			return false;
 		}
 
-		SynchronizedObject obj = serverInformations.server.network.GetSynchronizedObject(id);
+		SynchronizedObject obj = serverInformations.server.network.synchronizedObjects.Get(id);
 		if(obj == null){
 			return false;
 		}

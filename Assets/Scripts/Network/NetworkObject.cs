@@ -17,7 +17,7 @@ public abstract class NetworkObject {
 
 	protected ConcurrentQueue<Data> actionQueue {get ; private set;}
 
-	protected float timeout {get ; private set;}
+	public float timeout {get ; private set;}
 
 	private DataParser parser;
 

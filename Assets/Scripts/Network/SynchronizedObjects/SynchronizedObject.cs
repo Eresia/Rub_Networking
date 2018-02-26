@@ -8,6 +8,8 @@ public class SynchronizedObject : MonoBehaviour {
 
 	public int objectPrefabId;
 
+	public float timeout {get; set;}
+
 	public int id {get; private set;}
 
 	public int owner {get; private set;}
@@ -37,7 +39,7 @@ public class SynchronizedObject : MonoBehaviour {
 	}
 
 	public virtual void Init(int id, int owner) {
-		network.CreateSynchronizedObject(id, this);
+		network.synchronizedObjects.Create(id, this);
 		this.id = id;
 		this.owner = owner;
 
@@ -86,7 +88,7 @@ public class SynchronizedObject : MonoBehaviour {
 			return ;
 		}
 
-		network.RemoveSynchronizedObject(id);
+		network.synchronizedObjects.Remove(id);
 		if(network.isServer){
 			network.server.SendDataToAllClients(new DestroyObjectData(id));
 		}

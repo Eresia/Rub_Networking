@@ -12,7 +12,7 @@ public class DestroyObjectData : ServerData {
 	}
 
 	protected override bool Validate(){
-		return clientInformations.client.network.HasSynchronizedObject(id);
+		return clientInformations.client.network.synchronizedObjects.Has(id);
 	}
 
 	protected override bool Execute(){
@@ -20,6 +20,6 @@ public class DestroyObjectData : ServerData {
 	}
 
 	public override void ExecuteOnMainThread(){
-		GameObject.Destroy(clientInformations.client.network.GetSynchronizedObject(id).gameObject);
+		GameObject.Destroy(clientInformations.client.network.synchronizedObjects.Get(id).gameObject);
 	}
 }

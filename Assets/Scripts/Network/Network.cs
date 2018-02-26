@@ -26,45 +26,55 @@ public class Network : MonoBehaviour {
 
 	private int objectsId;
 
-	private ConcurrentDictionary<int, SynchronizedObject> synchronizedObjects;
-	private List<int> requiredObject;
+	public SynchronizedObjectGestion synchronizedObjects {get; private set;}
 
 	private void Awake() {
 		isLaunched = false;
 		objectsId = 0;
-		synchronizedObjects = new ConcurrentDictionary<int, SynchronizedObject>();
-		requiredObject = new List<int>();
+		synchronizedObjects = new SynchronizedObjectGestion(RequireLock);
 	}
 
 	public void LaunchServer(int port, World world){
-		isServer = true;
-		server = new Server(this, port, world, serverMaxAction, serverTimeout);
-		server.Launch();
-		isLaunched = true;
+		if(!isLaunched){
+			isServer = true;
+			server = new Server(this, port, world, serverMaxAction, serverTimeout);
+			server.Launch();
+			isLaunched = true;
+		}
 	}
 
 	public void LaunchClient(string address, int port, World world){
-		isServer = false;
-		client = new Client(this, address, port, world, clientMaxAction, clientTimeout);
-		client.Launch();
-		isLaunched = true;
+		if(!isLaunched){
+			isServer = false;
+			client = new Client(this, address, port, world, clientMaxAction, clientTimeout);
+			client.Launch();
+			isLaunched = true;
+		}
 	}
 
 	private void Update() {
 		if(isLaunched){
 			if(isServer){
 				int[] removedClient = server.CheckTimeout(Time.deltaTime);
-				int[] synchronizedObjectsIds = synchronizedObjects.Keys.ToArray();
-				foreach(int id in synchronizedObjectsIds){
-					if(removedClient.Contains(synchronizedObjects[id].owner)){
-						SynchronizedObject obj;
-						synchronizedObjects.TryRemove(id, out obj);
-						Destroy(obj.gameObject);
+				if(removedClient.Length > 0){
+					int[] synchronizedObjectsIds = synchronizedObjects.GetExistantIds();
+					foreach(int id in synchronizedObjectsIds){
+						if(removedClient.Contains(synchronizedObjects.Get(id).owner)){
+							synchronizedObjects.RemoveAndDestroy(id);
+						}
 					}
 				}
+				
 			}
 			else{
 				client.CheckTimeout(Time.deltaTime);
+				int[] actualObjects = synchronizedObjects.GetExistantIds();
+				foreach(int obj in actualObjects){
+					synchronizedObjects.IncrementTime(obj, Time.deltaTime);
+					if(synchronizedObjects.Timeout(obj, client.timeout)){
+						synchronizedObjects.RemoveAndDestroy(obj);
+					}
+				}
 			}
 		}
 	}
@@ -75,62 +85,22 @@ public class Network : MonoBehaviour {
 		return id;
 	}
 
-	public bool CreateSynchronizedObject(int i, SynchronizedObject obj){
-		if(HasSynchronizedObject(i)){
-			return false;
-		}
-
-		synchronizedObjects.TryAdd(i, obj);
-		return true;
-	}
-
-	public bool HasSynchronizedObject(int i){
-		return synchronizedObjects.ContainsKey(i);
-	}
-
-	public SynchronizedObject GetSynchronizedObject(int i){
-		if(HasSynchronizedObject(i)){
-			return synchronizedObjects[i];
-		}
-
-		return null;
-	}
-
-	public void RemoveSynchronizedObject(int i){
-		if(HasSynchronizedObject(i)){
-			SynchronizedObject obj;
-			synchronizedObjects.TryRemove(i, out obj);
-		}
-	}
-
-	public void RequireObject(int i){
-		lock(RequireLock){
-			if(!requiredObject.Contains(i)){
-				requiredObject.Add(i);
-			}
-		}
-	}
-
-	public bool HasRequiredObject(int i){
-		lock(RequireLock){
-			return requiredObject.Contains(i);
-		}
-	}
-
-	public void EndRequireObject(int i){
-		lock(RequireLock){
-			if(requiredObject.Contains(i)){
-				requiredObject.Remove(i);
-			}
-		}
-	}
-
 	public NetworkObject GetNetworkObject(){
 		if(isServer){
 			return server;
 		}
 		else{
 			return client;
+		}
+	}
+
+	private void OnDestroy() {
+		if(isServer){
+			server.Close();
+		}
+		else{
+			client.SendData(new DisconnexionData());
+			client.Close();
 		}
 	}
 }

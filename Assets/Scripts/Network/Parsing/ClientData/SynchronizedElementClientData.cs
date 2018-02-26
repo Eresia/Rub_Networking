@@ -16,7 +16,7 @@ public abstract class SynchronizedElementClientData<T> : ClientData where T : Sy
 	}
 
 	private bool ValidateType(){
-		SynchronizedObject obj = serverInformations.server.network.GetSynchronizedObject(id);
+		SynchronizedObject obj = serverInformations.server.network.synchronizedObjects.Get(id);
 		if(obj == null){
 			return false;
 		}
@@ -30,7 +30,7 @@ public abstract class SynchronizedElementClientData<T> : ClientData where T : Sy
 
 	protected T GetSynchronizedElement(){
 		if(element == null){
-			SynchronizedObject obj = serverInformations.server.network.GetSynchronizedObject(id);
+			SynchronizedObject obj = serverInformations.server.network.synchronizedObjects.Get(id);
 			element = (T) obj.synchronizedElements[typeof(T)];
 		}
 		return element;

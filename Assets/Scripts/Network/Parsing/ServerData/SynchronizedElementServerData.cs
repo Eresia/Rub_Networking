@@ -29,7 +29,7 @@ public abstract class SynchronizedElementServerData<T> : ServerData where T : Sy
 
 	protected SynchronizedObject GetSynchronizedObject(){
 		if(obj == null){
-			obj = clientInformations.client.network.GetSynchronizedObject(id);;
+			obj = clientInformations.client.network.synchronizedObjects.Get(id);;
 		}
 		return obj;
 	}
