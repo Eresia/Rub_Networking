@@ -99,10 +99,6 @@ public class Server : NetworkObject {
 		return id;
 	}
 
-	public override void BadReceive(){
-		socket.BeginReceive(new AsyncCallback(ReceiveCallback), null);
-	}
-
 	public void RemoveClient(IPEndPoint client){
 		ClientToken token;
 		if(clients.TryRemove(client, out token)){

@@ -31,7 +31,14 @@ public class Client : NetworkObject {
 
 	public override void Launch(){
 		base.Launch();
-		SendData(new ConnexionData());
+		network.StartCoroutine(LaunchCoroutine());
+	}
+
+	private IEnumerator LaunchCoroutine(){
+		do{
+			SendData(new ConnexionData());
+			yield return new WaitForSeconds(timeout);
+		} while(!isConnected);
 	}
 
 	private void SetClientInformations(World world){
@@ -44,6 +51,7 @@ public class Client : NetworkObject {
 	public void CheckTimeout(float deltaTime){
 		actualTime += deltaTime;
 		if(actualTime > timeout){
+			Debug.Log("close");
 			Close();
 		}
 	}

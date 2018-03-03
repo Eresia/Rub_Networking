@@ -107,7 +107,8 @@ public abstract class NetworkObject {
 	}
 
 	public virtual void BadReceive(){
-		Close();
+		CustomDebug.LogWarning("Bad reception", VerboseLevel.INFORMATIONS);
+		socket.BeginReceive(new AsyncCallback(ReceiveCallback), null);
 	}
 
 	public virtual void Close(){

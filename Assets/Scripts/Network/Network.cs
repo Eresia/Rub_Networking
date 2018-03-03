@@ -66,7 +66,7 @@ public class Network : MonoBehaviour {
 				}
 				
 			}
-			else{
+			else if(client.isConnected){
 				client.CheckTimeout(Time.deltaTime);
 				int[] actualObjects = synchronizedObjects.GetExistantIds();
 				foreach(int obj in actualObjects){
