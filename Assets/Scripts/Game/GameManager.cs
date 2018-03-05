@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour {
 
 	public PrefabGestion prefabGestion;
 	public SynchronizedCharacter characterPrefab;
+	public Slider pushSlider;
 
 	[Space]
 

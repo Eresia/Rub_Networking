@@ -29,6 +29,8 @@ public class World : MonoBehaviour {
 
 	public bool createInside;
 
+	public float deathZone;
+
 	public Transform selfTransform {get ; private set;}
 
 	public WorldGeneration worldGeneration {get ; private set;}

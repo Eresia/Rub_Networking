@@ -26,7 +26,7 @@ public class Client : NetworkObject {
 		serverEndPoint = new IPEndPoint(serverAddress, port);
 		actualTime = 0;
 
-		Init(new UdpClient(new IPEndPoint(serverAddress, 0)), network, maxActionPerFrame, timeout);
+		Init(new UdpClient(), network, maxActionPerFrame, timeout);
 	}
 
 	public override void Launch(){

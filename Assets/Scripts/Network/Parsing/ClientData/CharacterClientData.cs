@@ -11,18 +11,29 @@ public class CharacterClientData : SynchronizedElementClientData<SynchronizedCha
 
 	private bool jump;
 
+	private bool push;
+
 	private SerializableTransform playerTransform;
 	private SerializableVector3 cameraRotation;
 
-	public CharacterClientData(int id, float horizontalAxis, float verticalAxis, bool jump, Transform playerTransform, Quaternion cameraRotation) : base(id){
+	public CharacterClientData(int id, float horizontalAxis, float verticalAxis, bool jump, bool push, Transform playerTransform, Quaternion cameraRotation) : base(id){
 		this.horizontalAxis = horizontalAxis;
 		this.verticalAxis = verticalAxis;
 		this.jump = jump;
+		this.push = push;
 		this.playerTransform = new SerializableTransform(playerTransform);
 		this.cameraRotation = new SerializableVector3(cameraRotation);
 	}
 
 	protected override bool Validate(){
+		if((horizontalAxis < -1) || (horizontalAxis > 1)){
+			return false;
+		}
+
+		if((verticalAxis < -1) || (verticalAxis > 1)){
+			return false;
+		}
+
 		return true;
 	}
 
@@ -33,10 +44,7 @@ public class CharacterClientData : SynchronizedElementClientData<SynchronizedCha
 	public override void ExecuteOnMainThread(){
 		SynchronizedCharacter element = GetSynchronizedElement();
 
-		element.character.Move(horizontalAxis, verticalAxis);
-		if(jump){
-			element.character.Jump();
-		}
+		element.ApplyInputs(horizontalAxis, verticalAxis, jump, push);
 
 		Vector3 newPosition = playerTransform.position.ToVector3();
 
@@ -46,6 +54,10 @@ public class CharacterClientData : SynchronizedElementClientData<SynchronizedCha
 
 		element.character.selfTranform.rotation = playerTransform.rotation.ToQuaternion();
 		element.character.head.rotation = cameraRotation.ToQuaternion();
+
+		if(push){
+			element.character.Push();
+		}
 		
 	}
 }

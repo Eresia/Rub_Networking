@@ -7,6 +7,8 @@ public abstract class SynchronizedElement : MonoBehaviour{
 
     public int owner {get ; private set;}
 
+	public bool isServer {get; private set;}
+
 	protected SynchronizedObject synchronizedObject {get ; private set;}
 
 	protected Data actualData {get ; private set;}
@@ -17,6 +19,7 @@ public abstract class SynchronizedElement : MonoBehaviour{
 
 	public virtual void Init(int owner, bool isServer){
 		this.owner = owner;
+		this.isServer = isServer;
 	}
 
 	public void SetOwner(int owner){
@@ -24,6 +27,8 @@ public abstract class SynchronizedElement : MonoBehaviour{
 	}
 
 	public abstract ServerData SynchronizeFromServer();
+
+	public abstract ServerData SynchronizeFromServerToOwner();
 
 	public abstract ClientData SynchronizeFromClient();
 

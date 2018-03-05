@@ -21,6 +21,10 @@ public class SynchronizedTransform : SynchronizedElement {
         return new TransformData(synchronizedObject.id, selfTransform);
     }
 
+	public override ServerData SynchronizeFromServerToOwner(){
+		return null;
+	}
+
 	public override ClientData SynchronizeFromClient(){
         return null;
     }

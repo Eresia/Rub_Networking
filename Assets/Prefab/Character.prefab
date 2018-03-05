@@ -465,6 +465,13 @@ MonoBehaviour:
   maxAngleRotation: 90
   jumpForce: 6
   jumpRaycastLength: 1.5
+  pushCooldown: 0.1
+  pushDistance: 5
+  pushForce: 500
+  pushLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  pushYDirection: 0
   cantJumpLayers:
     serializedVersion: 2
     m_Bits: 1024

@@ -19,6 +19,7 @@ public class SynchronizedObject : MonoBehaviour {
 	public Dictionary<Type, SynchronizedElement> synchronizedElements {get ; private set;}
 
 	private List<Data> data;
+	private List<ServerData> ownerData;
 
 	private void Awake() {
 		synchronizedElements = new Dictionary<Type, SynchronizedElement>();
@@ -32,6 +33,7 @@ public class SynchronizedObject : MonoBehaviour {
 
 		network = GameManager.instance.network;
 		data = new List<Data>();
+		ownerData = new List<ServerData>();
 		if(network.isServer){
 			id = network.RequireNewObjectId();
 			Init(id, -1);
@@ -54,6 +56,7 @@ public class SynchronizedObject : MonoBehaviour {
 		}
 
 		data.Clear();
+		ownerData.Clear();
 
 		if(network.isServer){
 			foreach(SynchronizedElement se in synchronizedElements.Values){
@@ -61,11 +64,16 @@ public class SynchronizedObject : MonoBehaviour {
 				ServerData newData = se.SynchronizeFromServer();
 				if(newData != null){
 					data.Add(newData);
+					ownerData.Add(newData);
 				}
+
+				ownerData.Add(se.SynchronizeFromServerToOwner());
+				
 			}
 
 			SynchronizedObjectServerData finalData = new SynchronizedObjectServerData(data.Cast<ServerData>().ToArray(), id, objectPrefabId, owner);
-			network.server.SendDataToAllClients(finalData);
+			SynchronizedObjectServerData finalOwnerData = new SynchronizedObjectServerData(ownerData.ToArray(), id, objectPrefabId, owner);
+			network.server.SendDataToAllClients(finalData, owner, finalOwnerData);
 		}
 		else{
 			foreach(SynchronizedElement se in synchronizedElements.Values){
@@ -74,8 +82,6 @@ public class SynchronizedObject : MonoBehaviour {
 				if(newData != null){
 					data.Add(newData);
 				}
-
-				se.ExecuteOnMainThread();
 			}
 
 			SynchronizedObjectClientData finalData = new SynchronizedObjectClientData(data.Cast<ClientData>().ToArray(), id);

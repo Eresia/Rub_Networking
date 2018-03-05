@@ -25,6 +25,21 @@ public class Character : MonoBehaviour {
 	[SerializeField]
 	private float jumpRaycastLength;
 
+	[SerializeField]
+	private float pushCooldown;
+
+	[SerializeField]
+	private float pushDistance;
+
+	[SerializeField]
+	private float pushForce;
+
+	[SerializeField]
+	private LayerMask pushLayer;
+
+	[SerializeField]
+	private float pushYDirection;
+
 	[Space]
 
 	[SerializeField]
@@ -40,20 +55,16 @@ public class Character : MonoBehaviour {
 	
 	public Rigidbody selfRigidbody {get ; private set;}
 
+	private bool canPush;
+	private float actualPush;
+
 	void Awake()
 	{
 		selfTranform = GetComponent<Transform>();
 		selfRigidbody = GetComponent<Rigidbody>();
 		Cursor.lockState = CursorLockMode.Locked;
-	}
-
-	void FixedUpdate()
-	{
-		// Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-		// Rotate(Input.GetAxis ("Mouse X"), Input.GetAxis ("Mouse Y"));
-		// if(Input.GetButtonDown ("Jump")){
-		// 	Jump();
-		// }
+		canPush = true;
+		StartCoroutine(PushCooldownCoroutine());
 	}
 
 	public void Move(float x, float z){
@@ -70,6 +81,43 @@ public class Character : MonoBehaviour {
 		}
 	}
 
+	public void Push(){
+		if(canPush){
+			RaycastHit hit;
+
+			if(Physics.Raycast(selfTranform.position, head.forward, out hit, pushDistance, pushLayer)){
+				Character other = hit.collider.GetComponent<Character>();
+				if(other != null){
+					Vector3 direction = head.forward;
+					direction.y = pushYDirection;
+					other.selfRigidbody.velocity = direction * pushForce;
+				}
+			}
+			else{
+
+			}
+
+			actualPush = 0f;
+			canPush = false;
+		}
+	}
+
+	private IEnumerator PushCooldownCoroutine(){
+		while(true){
+			yield return new WaitWhile(() => canPush);
+			do{
+				yield return null;
+				actualPush += Time.deltaTime;
+			}while(actualPush < pushCooldown);
+			
+			canPush = true;
+		}
+	}
+
+	public float GetPushProgession(){
+		return actualPush / pushCooldown;
+	}
+
 	private Vector3 GetJumpPoint(int x, int z){
 		return selfTranform.position + new Vector3((x * selfTranform.localScale.x) / 2, 0, (z * selfTranform.localScale.z) / 2);
 	}
@@ -82,5 +130,12 @@ public class Character : MonoBehaviour {
 		}
 		yaw = Mathf.Clamp(yaw, minAngleRotation, maxAngleRotation);
 		head.localRotation = Quaternion.Euler(new Vector3(yaw, 0, 0));
+	}
+
+	public void Kill(){
+		Vector3 newPosition = GameManager.instance.map.GetRandomSpawnPosition();
+		newPosition.y += selfTranform.localScale.y;
+		selfTranform.position = newPosition;
+		selfRigidbody.velocity = Vector3.zero;
 	}
 }

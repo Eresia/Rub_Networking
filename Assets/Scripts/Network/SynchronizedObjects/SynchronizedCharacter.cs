@@ -21,6 +21,15 @@ public class SynchronizedCharacter : SynchronizedElement {
         synchronizedTransform = GetComponent<SynchronizedTransform>();
     }
 
+	private void Update()
+	{
+		if(isServer){
+			if(character.selfTranform.position.y < GameManager.instance.map.deathZone){
+				character.Kill();
+			}
+		}
+	}
+
     public override void Init(int owner, bool isServer){
         base.Init(owner, isServer);
         if(!isServer){
@@ -46,24 +55,33 @@ public class SynchronizedCharacter : SynchronizedElement {
         return new CharacterServerData(synchronizedObject.id, character.selfTranform.rotation, character.head.rotation);
     }
 
+	public override ServerData SynchronizeFromServerToOwner(){
+		return new CharacterOwnerServerData(synchronizedObject.id, character.GetPushProgession());
+	}
+
 	public override ClientData SynchronizeFromClient(){
         if(synchronizedObject.IsOwner()){
             float horizontal = Input.GetAxis("Horizontal");
             float vertical = Input.GetAxis("Vertical");
             bool jump = Input.GetButton ("Jump");
+			bool push = Input.GetMouseButtonDown(0);
 
-            character.Move(horizontal, vertical);
-            if(jump){
-                character.Jump();
-            }
+            ApplyInputs(horizontal, vertical, jump, push);
 
             character.Rotate(Input.GetAxis ("Mouse X"), Input.GetAxis ("Mouse Y"));
-            return new CharacterClientData(synchronizedObject.id, horizontal, vertical, jump, character.selfTranform, character.head.rotation);
+            return new CharacterClientData(synchronizedObject.id, horizontal, vertical, jump, push, character.selfTranform, character.head.rotation);
         }
         else{
             return null;
         }
     }
+
+	public void ApplyInputs(float horizontalAxis, float verticalAxis, bool jump, bool push){
+		character.Move(horizontalAxis, verticalAxis);
+		if(jump){
+			character.Jump();
+		}
+	}
 
     public static void CreateCharacter(int owner, SynchronizedCharacter characterPrefab, World world){
 		SynchronizedCharacter newCharacter = Instantiate<SynchronizedCharacter>(characterPrefab);

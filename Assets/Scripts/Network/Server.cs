@@ -90,6 +90,23 @@ public class Server : NetworkObject {
 		}
 	}
 
+	/* Send different data for specified owner */
+	public void SendDataToAllClients(Data message, int owner, Data ownerMessage){
+		if(owner < 0){
+			SendDataToAllClients(message);
+			return ;
+		}
+		
+		foreach(IPEndPoint c in clients.Keys){
+			if(clients[c].id != owner){
+				SendData(c, message);
+			}
+			else{
+				SendData(c, ownerMessage);
+			}
+		}
+	}
+
 	public int CreateNewClient(IPEndPoint newClient){
 		int id = -1;
 		if(clients.TryAdd(newClient, new ClientToken(actualId))){

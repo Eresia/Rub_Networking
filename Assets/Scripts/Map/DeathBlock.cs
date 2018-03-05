@@ -10,10 +10,10 @@ public class DeathBlock : MonoBehaviour {
 	void OnTriggerEnter(Collider other)
 	{
 		if(other.gameObject.layer == playerLayer){
-			Transform otherTransform = other.GetComponent<Transform>();
-			Vector3 characterPosition = GameManager.instance.map.GetRandomSpawnPosition();
-			characterPosition.y += otherTransform.localScale.y;
-			otherTransform.position = characterPosition;
+			Character character = other.GetComponent<Character>();
+			if(character != null){
+				character.Kill();
+			}
 		}
 	}
 }
