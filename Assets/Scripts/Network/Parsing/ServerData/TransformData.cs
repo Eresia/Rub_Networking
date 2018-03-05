@@ -26,7 +26,7 @@ public class TransformData : SynchronizedElementServerData<SynchronizedTransform
 
 		bool isOwner = (clientInformations.client.clientId == element.owner);
 
-		bool needToSynch = !isOwner || !element.simulateOnClient || element.ExceedError(element.selfTransform.position, newPosition);
+		bool needToSynch = element.NeedResynch(isOwner, newPosition);
 
 		if(needToSynch){
 			element.selfTransform.position = newPosition;
