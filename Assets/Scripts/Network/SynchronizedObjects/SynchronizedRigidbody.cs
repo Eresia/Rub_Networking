@@ -19,6 +19,10 @@ public class SynchronizedRigidbody : SynchronizedElement {
         return new RigidbodyData(synchronizedObject.id, selfRigidbody);
     }
 
+	public override ServerData SynchronizeFromServerToOwner(){
+		return null;
+	}
+
 	public override ClientData SynchronizeFromClient(){
         return null;
     }
