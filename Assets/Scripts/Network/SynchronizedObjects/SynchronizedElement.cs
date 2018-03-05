@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using System.Collections.Concurrent;
 
 [RequireComponent(typeof(SynchronizedObject))]
 public abstract class SynchronizedElement : MonoBehaviour{
@@ -11,10 +13,11 @@ public abstract class SynchronizedElement : MonoBehaviour{
 
 	protected SynchronizedObject synchronizedObject {get ; private set;}
 
-	protected Data actualData {get ; private set;}
+	protected ConcurrentDictionary<Type, Data> actualData {get ; private set;}
 
 	protected virtual void Awake() {
 		synchronizedObject = GetComponent<SynchronizedObject>();
+		actualData = new ConcurrentDictionary<Type, Data>();
 	}
 
 	public virtual void Init(int owner, bool isServer){
@@ -33,12 +36,18 @@ public abstract class SynchronizedElement : MonoBehaviour{
 	public abstract ClientData SynchronizeFromClient();
 
 	public virtual void ExecuteOnMainThread(){
-		if(actualData != null){
-			actualData.ExecuteOnMainThread();
+		foreach(Data data in actualData.Values){
+			data.ExecuteOnMainThread();
 		}
 	}
 
 	public void SetData(Data newData){
-		actualData = newData;
+		if(!actualData.ContainsKey(newData.GetType())){
+			actualData.TryAdd(newData.GetType(), newData);
+		}
+		else{
+			actualData[newData.GetType()] = newData;
+		}
+		
 	}
 }

@@ -67,7 +67,10 @@ public class SynchronizedObject : MonoBehaviour {
 					ownerData.Add(newData);
 				}
 
-				ownerData.Add(se.SynchronizeFromServerToOwner());
+				ServerData newOwnerData = se.SynchronizeFromServerToOwner();
+				if(newOwnerData != null){
+					ownerData.Add(newOwnerData);
+				}
 				
 			}
 

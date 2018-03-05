@@ -64,7 +64,7 @@ public class SynchronizedCharacter : SynchronizedElement {
             float horizontal = Input.GetAxis("Horizontal");
             float vertical = Input.GetAxis("Vertical");
             bool jump = Input.GetButton ("Jump");
-			bool push = Input.GetMouseButtonDown(0);
+			bool push = Input.GetMouseButton(0);
 
             ApplyInputs(horizontal, vertical, jump, push);
 

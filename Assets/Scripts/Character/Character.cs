@@ -109,6 +109,8 @@ public class Character : MonoBehaviour {
 				yield return null;
 				actualPush += Time.deltaTime;
 			}while(actualPush < pushCooldown);
+
+			actualPush = pushCooldown;
 			
 			canPush = true;
 		}
