@@ -50,4 +50,12 @@ public abstract class SynchronizedElement : MonoBehaviour{
 		}
 		
 	}
+
+	public bool CheckTimeStamp(Data data){
+		if(!actualData.ContainsKey(data.GetType())){
+			return true;
+		}
+
+		return actualData[data.GetType()].time < data.time;
+	}
 }

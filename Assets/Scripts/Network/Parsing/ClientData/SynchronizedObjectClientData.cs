@@ -9,7 +9,7 @@ public class SynchronizedObjectClientData : ClientData {
 
 	public ClientData[] data;
 
-	public SynchronizedObjectClientData(ClientData[] data, int id){
+	public SynchronizedObjectClientData(ClientData[] data, int id) : base(){
 		this.data = data;
 		this.id = id;
 	}

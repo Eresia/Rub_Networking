@@ -12,7 +12,7 @@ public class AcceptConnexionData : ServerData {
 
 	public int clientId;
 
-	public AcceptConnexionData(World.WorldGeneration worldGeneration, int clientId){
+	public AcceptConnexionData(World.WorldGeneration worldGeneration, int clientId) : base(){
 		this.worldGeneration = worldGeneration;
 		this.clientId = clientId;
 	}

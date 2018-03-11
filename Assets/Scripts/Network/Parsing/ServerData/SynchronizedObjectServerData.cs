@@ -13,7 +13,7 @@ public class SynchronizedObjectServerData : ServerData {
 
 	public ServerData[] data;
 
-	public SynchronizedObjectServerData(ServerData[] data, int id, int prefabId, int owner){
+	public SynchronizedObjectServerData(ServerData[] data, int id, int prefabId, int owner) : base(){
 		this.id = id;
 		this.data = data;
 		this.prefabId = prefabId;

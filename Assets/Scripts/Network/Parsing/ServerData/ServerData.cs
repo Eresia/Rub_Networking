@@ -43,12 +43,6 @@ public abstract class ServerData : Data{
 		}
 	}
 
-	protected abstract bool Validate();
-
-	protected abstract bool Execute();
-
-	public abstract void ExecuteOnMainThread();
-
 	protected virtual bool NeedConnexion(){
 		return true;
 	}

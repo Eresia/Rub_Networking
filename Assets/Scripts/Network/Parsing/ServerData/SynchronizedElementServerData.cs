@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 [System.Serializable]
 public abstract class SynchronizedElementServerData<T> : ServerData where T : SynchronizedElement{
@@ -13,7 +14,7 @@ public abstract class SynchronizedElementServerData<T> : ServerData where T : Sy
 	[System.NonSerialized]
 	private T element;
 
-	protected SynchronizedElementServerData(int id){
+	protected SynchronizedElementServerData(int id) : base(){
 		this.id = id;
 		element = null;
 	}
@@ -24,12 +25,16 @@ public abstract class SynchronizedElementServerData<T> : ServerData where T : Sy
 			return false;
 		}
 
-		return obj.synchronizedElements.ContainsKey(typeof(T));
+		if(!obj.synchronizedElements.ContainsKey(typeof(T))){
+			return false;
+		}
+
+		return GetSynchronizedElement().CheckTimeStamp(this);
 	}
 
 	protected SynchronizedObject GetSynchronizedObject(){
 		if(obj == null){
-			obj = clientInformations.client.network.synchronizedObjects.Get(id);;
+			obj = clientInformations.client.network.synchronizedObjects.Get(id);
 		}
 		return obj;
 	}

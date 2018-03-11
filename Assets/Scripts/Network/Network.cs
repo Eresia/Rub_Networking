@@ -99,8 +99,10 @@ public class Network : MonoBehaviour {
 			server.Close();
 		}
 		else{
-			client.SendData(new DisconnexionData());
-			client.Close();
+			if(client != null){
+				client.SendData(new DisconnexionData());
+				client.Close();
+			}
 		}
 	}
 }

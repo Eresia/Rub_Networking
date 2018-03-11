@@ -7,7 +7,7 @@ public class DestroyObjectData : ServerData {
 
 	public int id;
 
-	public DestroyObjectData(int id){
+	public DestroyObjectData(int id) : base(){
 		this.id = id;
 	}
 

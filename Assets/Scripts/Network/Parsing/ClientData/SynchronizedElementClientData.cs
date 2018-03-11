@@ -10,7 +10,7 @@ public abstract class SynchronizedElementClientData<T> : ClientData where T : Sy
 	[System.NonSerialized]
 	private T element;
 
-	protected SynchronizedElementClientData(int id){
+	protected SynchronizedElementClientData(int id) : base(){
 		this.id = id;
 		element = null;
 	}

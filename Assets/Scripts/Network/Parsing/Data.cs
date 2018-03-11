@@ -1,8 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
-public interface Data {
+[System.Serializable]
+public abstract class Data {
 
-	void ExecuteOnMainThread();
+	public DateTime time;
+
+	public Data(){
+		time = DateTime.Now;
+	}
+
+	protected abstract bool Validate();
+
+	protected abstract bool Execute();
+
+	public abstract void ExecuteOnMainThread();
 }
