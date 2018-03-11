@@ -60,12 +60,12 @@ Cette méthode me permet pour chaque paquet reçu de m'assurer des types de donn
 
 - ServerData/ServerData & ClientData/ClientData : Classes abstraites héritant de la précédente afin d'implémenter les différentes particularités des paquets envoyés du serveur et du client. 
 
-Note : Les classes héritants de "ServerData" sont créées sur **le serveur** et éxécutées sur **le client**. Et inversement. Cela peut paraître parfois illogique.
+**Note :** Les classes héritants de "ServerData" sont créées sur **le serveur** et éxécutées sur **le client**. Et inversement. Cela peut paraître parfois illogique.
 
 - ClientData/ConnexionData & ServerData/AcceptConnexionData : Des exemples de paquets "classiques" représentant la connexion et la déconnexion au serveur.
 
 - Les classes SynchronizedObject...Data et SynchronizedElement...Data sont elles des abstractions des informations liées aux objets et éléments synchronisés et qui vont encore une fois abstraire le code communs à toutes les classes qui en héritent.
 
-**Note** Pour éviter la surcharge d'opérations par frame, seul le SynchronizedElement...Data le plus récent sera gardé en mémoire à l'éxécution du thread principal.
+**Note :** Pour éviter la surcharge d'opérations par frame, seul le SynchronizedElement...Data le plus récent sera gardé en mémoire à l'éxécution du thread principal.
 
 - ServerData/TransformData : Encore une fois l'exemple de la forme qu'à l'information du transform quand il est envoyé du serveur au client.
