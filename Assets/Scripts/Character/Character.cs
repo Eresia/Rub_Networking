@@ -64,6 +64,7 @@ public class Character : MonoBehaviour {
 		selfRigidbody = GetComponent<Rigidbody>();
 		Cursor.lockState = CursorLockMode.Locked;
 		canPush = true;
+		actualPush = pushCooldown;
 		StartCoroutine(PushCooldownCoroutine());
 	}
 
